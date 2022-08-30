@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
-import React, { useEffect, Component } from 'react'
-import api, { apiServer } from './api';
+import React, { Component } from 'react'
+import api from './api';
 
 import Voice from '@react-native-community/voice';
 
@@ -39,33 +39,6 @@ export default class App extends Component {
             .catch(error => console.log(error))
     }
 
-    transformarVozEmTexto = () => {
-        apiServer.get('/api/speech-to-text/token/').then((response) => {
-            return response.json();
-        })
-            .then(function (token) {
-                console.log('TOKEN: ', token)
-
-                var stream = recognizeMic(Object.assign(token, {
-                    objectMode: true, // send objects instead of text
-                    format: false // optional - performs basic formatting on the results such as capitals an periods
-                }));
-
-                stream.on('data', function (data) {
-                    console.log(data);
-                });
-
-                stream.on('error', function (err) {
-                    console.log(err);
-                });
-
-                document.querySelector('#stop').onclick = stream.stop.bind(stream);
-
-            }).catch(function (error) {
-                console.log(error);
-            });
-    }
-
     // ouvirResposta = () => {
     //     const texto = this.state.resposta2;
     //     Speech.speak(texto, {
@@ -96,22 +69,24 @@ export default class App extends Component {
     }
 
     onSpeechStart(e) {
-        this.setState({started: e,})
+        this.setState({ started: e, })
     }
     onSpeechResults(e) {
-        this.setState({results: e.value})
+        this.setState({ results: e.value })
     }
     onSpeechRecognized(e) {
-        this.setState({recognized: e,})
+        this.setState({ recognized: e, })
     }
-    
+
     async startSpeechToText(e) {
-        this.setState({results: [],
-                        recognized: e,})
+        this.setState({
+            results: [],
+            recognized: e,
+        })
         try {
             await Voice.start('en-US');
-            
-        } catch(error) { 
+
+        } catch (error) {
             console.log('Esse e o erro ===>>>', error)
         }
     };
@@ -187,28 +162,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 5,
         backgroundColor: 'orange',
-        marginTop: 1,
-
-    },
-    button2: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'red',
-        marginTop: 1,
-
-    },
-    button3: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'cyan',
         marginTop: 1,
 
     },
