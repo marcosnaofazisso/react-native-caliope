@@ -1,10 +1,7 @@
-import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
 import React, { Component } from 'react'
-import api from './api';
-<<<<<<< HEAD
+import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
 
-=======
->>>>>>> b885bc3b2053dffb7172a8402c2a9f050db754b3
+import api from './api';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
@@ -63,9 +60,6 @@ export default class App extends Component {
         const texto = this.state.resposta2;
         Tts.speak(texto);
     };
-
-    gravarVoz = () => {
-    }
 
     onSpeechRecognized = (e) => {
         console.log("recogninzed", e)
