@@ -1,24 +1,40 @@
 import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
 import React, { Component } from 'react'
 import api from './api';
-
 import Voice from '@react-native-community/voice';
+
 
 export default class App extends Component {
     constructor(props) {
         super(props);
 
+        Voice.onSpeechStart = this.onSpeechStart.bind(this);
+        Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
+        Voice.onSpeechError = this.onSpeechError;
+        Voice.onSpeechResults = this.onSpeechResults.bind(this);
+
         this.state = {
-            sessionId: '',
-            mensagem: 'Oi Naruto tudo bem',
-            resposta1: '',
-            resposta2: '',
+            sessionId: "",
+            mensagem: "Oi Naruto tudo bem",
+            resposta1: "",
+            resposta2: "",
+            recording: "stoppped",
+            recognized: "",
+            result: "",
+
             results: [],
-            started: '',
-            recognized: '',
         }
     }
 
+    async componentDidMount() {
+        const response = await api.get('/api/session')
+        this.setState({
+            sessionId: response.data.result.session_id,
+        })
+        console.log("SESSION ID RESULT:", response.data.result.session_id);
+        Voice.destroy().then(Voice.removeAllListeners);
+        console.log("removi os listeners....");
+    }
 
     mandarMensagem = () => {
         api.post('/api/message', {
@@ -46,82 +62,69 @@ export default class App extends Component {
     //     });
     // };
 
-
-    // useEffect = (() => {
-
-
-    //     return () => {
-    //         Voice.destroy().then(Voice.removeAllListeners);
-    //     }
-    // }, []);
-
-    async componentDidMount() {
-        const response = await api.get('/api/session')
-        this.setState({
-            sessionId: response.data.result.session_id,
-        })
-
-        Voice.onSpeechStart = this.onSpeechStart.bind(this);
-        Voice.onSpeechResults = this.onSpeechResults.bind(this);
-        Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
-
-        console.log('SESSION ID RESULT:', response.data.result.session_id);
+    gravarVoz = () => {
     }
 
-    onSpeechStart(e) {
-        this.setState({ started: e, })
-    }
-    onSpeechResults(e) {
-        this.setState({ results: e.value })
-    }
-    onSpeechRecognized(e) {
-        this.setState({ recognized: e, })
+    onSpeechRecognized = (e) => {
+        console.log("recogninzed", e)
     }
 
-    async startSpeechToText(e) {
-        this.setState({
-            results: [],
-            recognized: e,
-        })
+    onSpeechStart = (e) => {
+        console.log("start handler==>>>", e)
+    }
+    onSpeechEnd = (e) => {
+        console.log("stop handler", e)
+        this.setState({ recording: "audio parado com sucesso." })
+    }
+
+    onSpeechResults = (e) => {
+        let text = e.value[0]
+        this.setState({ results: text })
+        this.setState({ recording: "audio gravado com sucesso." })
+        console.log("speech result handler", e)
+    }
+
+    startRecording = async () => {
+        this.setState({ recording: "gravando..." })
         try {
-            await Voice.start('en-US');
-
+            Voice.start('pt-Br')
         } catch (error) {
-            console.log('Esse e o erro ===>>>', error)
+            console.log("error raised", error)
         }
-    };
+    }
 
-    stopSpeechToText = async () => {
-        await Voice.stop();
-    };
-
-    // onSpeechResults = (result) => {
-    //     this.setState({results: result.value});
-    // };
-
-    onSpeechError = (error) => {
-        console.log(error);
-    };
+    stopRecording = async () => {
+        this.setState({ recording: "gravacao parada." })
+        try {
+            Voice.stop()
+        } catch (error) {
+            console.log("error raised", error)
+        }
+    }
 
     render() {
         return (
             <>
                 <View style={styles.container}>
                     <Text style={styles.mainTitle}>Naruto App</Text>
-                    {/* Aqui temos o Session ID que é obtido quando o app renderiza, com o componentDidMount */}
                     <Text style={styles.title}>SESSION ID: {this.state.sessionId}</Text>
-                    {/* Aqui temos a resposta que é obtida através do método POST quando acionada na função mandarMensagem*/}
                     <Text style={styles.title}>Resposta: </Text>
                     <Text style={styles.title}>{this.state.resposta1}</Text>
                     <Text style={styles.title}>{this.state.resposta2}</Text>
+                    <Text style={styles.title}>Recording: {this.state.recording}</Text>
+                    <Text style={styles.title}>Result: {this.state.result}</Text>
+                    <Text style={styles.title}>Results: {this.state.results}</Text>
                 </View>
                 <Pressable style={styles.button1} onPress={this.mandarMensagem.bind(this)}>
                     <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
                 </Pressable>
 
+                <Pressable style={styles.button2} onPress={this.gravarVoz.bind(this)}>
+                    <Text style={styles.text}>Gravar Voz</Text>
+                </Pressable>
 
-                <Button title='Start Speech to Text' onPress={this.startSpeechToText.bind(this)} />
-                <Button title='Stop Speech to Text' onPress={this.stopSpeechToText.bind(this)} />
+                <Button title='Start Speech to Text' onPress={this.startRecording.bind(this)} />
+                <Button title='Stop Speech to Text' onPress={this.stopRecording.bind(this)} />
                 {/* <Pressable style={styles.button3} onPress={this.ouvirResposta.bind(this)}>
                     <Text style={styles.text}>Ouvir resposta</Text>
                 </Pressable> */}
@@ -172,5 +175,4 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         color: 'white',
     }
-})
-    ;
+});
