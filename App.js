@@ -1,8 +1,6 @@
 import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
-import React, { useEffect, Component } from 'react'
-import api, { apiServer } from './api';
-// import * as Speech from 'expo-speech';
-
+import React, { Component } from 'react'
+import api from './api';
 import Voice from '@react-native-community/voice';
 
 
@@ -167,28 +165,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 5,
         backgroundColor: 'orange',
-        marginTop: 1,
-
-    },
-    button2: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'red',
-        marginTop: 1,
-
-    },
-    button3: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'cyan',
         marginTop: 1,
 
     },
