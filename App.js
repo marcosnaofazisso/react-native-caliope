@@ -1,7 +1,10 @@
 import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
 import React, { Component } from 'react'
 import api from './api';
+<<<<<<< HEAD
 
+=======
+>>>>>>> b885bc3b2053dffb7172a8402c2a9f050db754b3
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
@@ -164,28 +167,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 5,
         backgroundColor: 'orange',
-        marginTop: 1,
-
-    },
-    button2: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'red',
-        marginTop: 1,
-
-    },
-    button3: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'cyan',
         marginTop: 1,
 
     },
