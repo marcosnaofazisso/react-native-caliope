@@ -1,48 +1,61 @@
-import { Pressable, StyleSheet, Text, View, Button, PermissionsAndroid } from 'react-native';
-import React, { useEffect, useState } from 'react'
-import api from './api';
-import { PERMISSIONS } from 'react-native-permissions';
+import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
+import React, { useEffect, Component } from 'react'
+import api, { apiServer } from './api';
+// import * as Speech from 'expo-speech';
 
 import Voice from '@react-native-community/voice';
 
-const App = () => {
-    const [sessionId, setSessionId] = useState('');
-    const [mensagem, setMessage] = useState('Oi Naruto tudo bem');
-    const [resposta1, setResposta1] = useState('');
-    const [resposta2, setResposta2] = useState('');
-    const [results, setResults] = useState([]);
-    const [started, setStarted] = useState('');
-    const [recognized, setRecognized] = useState('');
-    const [permission, setPermission] = useState('');
+
+export default class App extends Component {
+    constructor(props) {
+        super(props);
+
+        Voice.onSpeechStart = this.onSpeechStart.bind(this);
+        Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
+        Voice.onSpeechError = this.onSpeechError;
+        Voice.onSpeechResults = this.onSpeechResults.bind(this);
+
+        this.state = {
+            sessionId: "",
+            mensagem: "Oi Naruto tudo bem",
+            resposta1: "",
+            resposta2: "",
+            recording: "stoppped",
+            recognized: "",
+            result: "",
+
+            results: [],
+        }
+    }
+
+    async componentDidMount() {
+        const response = await api.get('/api/session')
+        this.setState({
+            sessionId: response.data.result.session_id,
+        })
+        console.log("SESSION ID RESULT:", response.data.result.session_id);
+        Voice.destroy().then(Voice.removeAllListeners);
+        console.log("removi os listeners....");
+    }
 
     mandarMensagem = () => {
         api.post('/api/message', {
-            "session_id": sessionId,
+            "session_id": this.state.sessionId,
             "input": {
                 "message_type": "text",
-                "text": mensagem
+                "text": this.state.mensagem
             }
         })
             .then(response => {
                 console.log("RESPONSE 1:",
                     response.data.result.output.generic[1].text +
-                    response.data.result.output.generic[2].text);
-                setResposta1(response.data.result.output.generic[1].text);
-                setResposta2(response.data.result.output.generic[2].text);
+                    response.data.result.output.generic[2].text)
+                this.setState({ resposta1: response.data.result.output.generic[1].text })
+                this.setState({ resposta2: response.data.result.output.generic[2].text })
 
             })
             .catch(error => console.log(error))
     }
-
-    useEffect(() => {
-        const getSessionId = async () => {
-            const response = await api.get('/api/session')
-            setSessionId(response.data.result.session_id);
-            console.log('SESSION ID RESULT:', response.data.result.session_id);
-        }
-        getSessionId()
-    }, [])
-
 
     // ouvirResposta = () => {
     //     const texto = this.state.resposta2;
@@ -51,86 +64,77 @@ const App = () => {
     //     });
     // };
 
-    useEffect(() => {
-        Voice.onSpeechError = onSpeechError;
-        Voice.onSpeechResults = onSpeechResults;
-        return () => {
-            Voice.destroy().then(Voice.removeAllListeners);
-        }
-    }, []);
+    gravarVoz = () => {
+    }
 
-    const startSpeechToText = async () => {
+    onSpeechRecognized = (e) => {
+        console.log("recogninzed", e)
+    }
+
+    onSpeechStart = (e) => {
+        console.log("start handler==>>>", e)
+    }
+    onSpeechEnd = (e) => {
+        console.log("stop handler", e)
+        this.setState({ recording: "audio parado com sucesso." })
+    }
+
+    onSpeechResults = (e) => {
+        let text = e.value[0]
+        this.setState({ results: text })
+        this.setState({ recording: "audio gravado com sucesso." })
+        console.log("speech result handler", e)
+    }
+
+    startRecording = async () => {
+        this.setState({ recording: "gravando..." })
         try {
-            setStarted('gravando...');
-            await Voice.start('en-US', {
-                RECOGNIZER_ENGINE: 'GOOGLE',
-                EXTRA_PARTIAL_RESULTS: true,
-            });
+            Voice.start('pt-Br')
         } catch (error) {
-            console.error(error);
+            console.log("error raised", error)
         }
-    };
+    }
 
-    const stopSpeechToText = async () => {
+    stopRecording = async () => {
+        this.setState({ recording: "gravacao parada." })
         try {
-            setStarted('gravacao parada');
-            await Voice.stop();
+            Voice.stop()
         } catch (error) {
-            console.error(error);
+            console.log("error raised", error)
         }
     }
 
-    const onSpeechResults = (result) => {
-        console.log("RES =====>", result);
-        console.log("RES VALUE ====> ", result.value);
-        setResults(result.value);
-    }
-
-    const onSpeechError = (error) => {
-        console.log(error);
-    }
-
-    const requestAudioPermission = async () => {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO);
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("You can use the audio");
-                setPermission('autorizado')
-            } else {
-                setPermission('nãp autorizado')
-                console.log("Audio permission denied");
-            }
-        } catch (err) {
-            console.warn(err);
-        }
-    }
-
-
-    return (
-        <>
-            <View style={styles.container}>
-                <Text style={styles.mainTitle}>Naruto App</Text>
-                <Text style={styles.title}>SESSION ID: {sessionId}</Text>
-                <Text style={styles.title}>Resposta: </Text>
-                <Text style={styles.title}>{resposta1}</Text>
-                <Text style={styles.title}>{resposta2}</Text>
-                <Pressable style={styles.button1} onPress={mandarMensagem}>
-                    <Text style={styles.text}>Gerar nova Resposta</Text>
+    render() {
+        return (
+            <>
+                <View style={styles.container}>
+                    <Text style={styles.mainTitle}>Naruto App</Text>
+                    <Text style={styles.title}>SESSION ID: {this.state.sessionId}</Text>
+                    <Text style={styles.title}>Resposta: </Text>
+                    <Text style={styles.title}>{this.state.resposta1}</Text>
+                    <Text style={styles.title}>{this.state.resposta2}</Text>
+                    <Text style={styles.title}>Recording: {this.state.recording}</Text>
+                    <Text style={styles.title}>Result: {this.state.result}</Text>
+                    <Text style={styles.title}>Results: {this.state.results}</Text>
+                </View>
+                <Pressable style={styles.button1} onPress={this.mandarMensagem.bind(this)}>
+                    <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
                 </Pressable>
 
+                <Pressable style={styles.button2} onPress={this.gravarVoz.bind(this)}>
+                    <Text style={styles.text}>Gravar Voz</Text>
+                </Pressable>
 
-                <Text style={styles.title}>Permission: {permission}</Text>
-                <Button title="request permissions" onPress={requestAudioPermission} />
+                <Button title='Start Speech to Text' onPress={this.startRecording.bind(this)} />
+                <Button title='Stop Speech to Text' onPress={this.stopRecording.bind(this)} />
+                {/* <Pressable style={styles.button3} onPress={this.ouvirResposta.bind(this)}>
+                    <Text style={styles.text}>Ouvir resposta</Text>
+                </Pressable> */}
+            </>
+        )
 
-
-                <Text style={styles.title}>Started: {started}</Text>
-                <Button title='Start Speech' onPress={startSpeechToText} />
-                <Button title='Stop Speech' onPress={stopSpeechToText} />
-            </View>
-        </>
-    )
-};
+    }
+}
 
 
 const styles = StyleSheet.create({
@@ -196,5 +200,3 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 });
-
-export default App;
