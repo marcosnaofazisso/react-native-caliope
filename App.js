@@ -1,10 +1,9 @@
 import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
-import React, { useEffect, Component } from 'react'
-import api, { apiServer } from './api';
-// import * as Speech from 'expo-speech';
+import React, { Component } from 'react'
+import api from './api';
 
 import Voice from '@react-native-community/voice';
-
+import Tts from 'react-native-tts';
 
 export default class App extends Component {
     constructor(props) {
@@ -35,7 +34,6 @@ export default class App extends Component {
         })
         console.log("SESSION ID RESULT:", response.data.result.session_id);
         Voice.destroy().then(Voice.removeAllListeners);
-        console.log("removi os listeners....");
     }
 
     mandarMensagem = () => {
@@ -57,12 +55,11 @@ export default class App extends Component {
             .catch(error => console.log(error))
     }
 
-    // ouvirResposta = () => {
-    //     const texto = this.state.resposta2;
-    //     Speech.speak(texto, {
-    //         language: "pt-BR"
-    //     });
-    // };
+    ouvirResposta = () => {
+        Tts.setDefaultLanguage('pt-BR');
+        const texto = this.state.resposta2;
+        Tts.speak(texto);
+    };
 
     gravarVoz = () => {
     }
@@ -127,9 +124,9 @@ export default class App extends Component {
 
                 <Button title='Start Speech to Text' onPress={this.startRecording.bind(this)} />
                 <Button title='Stop Speech to Text' onPress={this.stopRecording.bind(this)} />
-                {/* <Pressable style={styles.button3} onPress={this.ouvirResposta.bind(this)}>
+                <Pressable style={styles.button3} onPress={this.ouvirResposta.bind(this)}>
                     <Text style={styles.text}>Ouvir resposta</Text>
-                </Pressable> */}
+                </Pressable>
             </>
         )
 

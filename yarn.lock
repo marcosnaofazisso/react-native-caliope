@@ -5851,6 +5851,11 @@
   "resolved" "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-3.6.1.tgz"
   "version" "3.6.1"
 
+"react-native-tts@^4.1.0":
+  "integrity" "sha512-tvf3lQ6u9MqztUie37qoPw5YQPqi0ql1lPhDsBBs/RRA6A/H1J9X9H/qb1A0Hx0ZpjavrEdtVSqQQ2JDZvZCTQ=="
+  "resolved" "https://registry.npmjs.org/react-native-tts/-/react-native-tts-4.1.0.tgz"
+  "version" "4.1.0"
+
 "react-native@*", "react-native@>=0.40.0", "react-native@>=0.63.3", "react-native@0.69.5":
   "integrity" "sha512-4Psrj1nDMLQjBXVH8n3UikzOHQc8+sa6NbxZQR0XKtpx8uC3HiJBgX+/FIum/RWxfi5J/Dt/+A2gLGmq2Hps8g=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.69.5.tgz"
