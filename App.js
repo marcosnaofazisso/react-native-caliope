@@ -115,13 +115,9 @@ export default class App extends Component {
                     <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
                 </Pressable>
 
-                <Pressable style={styles.button2} onPress={this.gravarVoz.bind(this)}>
-                    <Text style={styles.text}>Gravar Voz</Text>
-                </Pressable>
-
                 <Button title='Start Speech to Text' onPress={this.startRecording.bind(this)} />
                 <Button title='Stop Speech to Text' onPress={this.stopRecording.bind(this)} />
-                <Pressable style={styles.button3} onPress={this.ouvirResposta.bind(this)}>
+                <Pressable style={styles.button2} onPress={this.ouvirResposta.bind(this)}>
                     <Text style={styles.text}>Ouvir resposta</Text>
                 </Pressable>
             </>
@@ -161,6 +157,17 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 5,
         backgroundColor: 'orange',
+        marginTop: 1,
+
+    },
+    button2: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 50,
+        paddingHorizontal: 32,
+        borderRadius: 4,
+        elevation: 5,
+        backgroundColor: 'cyan',
         marginTop: 1,
 
     },
