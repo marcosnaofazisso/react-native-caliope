@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
@@ -115,8 +115,15 @@ export default class App extends Component {
                     <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
                 </Pressable>
 
-                <Button title='Start Speech to Text' onPress={this.startRecording.bind(this)} />
-                <Button title='Stop Speech to Text' onPress={this.stopRecording.bind(this)} />
+                    <TouchableOpacity style={styles.button2}
+                    activeOpacity={0.9}
+                    onPressIn={this.startRecording.bind(this)}
+                    onPressOut={this.stopRecording.bind(this)}
+                    >
+                        <Text>APERTE</Text>
+                    </TouchableOpacity>
+
+
                 <Pressable style={styles.button2} onPress={this.ouvirResposta.bind(this)}>
                     <Text style={styles.text}>Ouvir resposta</Text>
                 </Pressable>
