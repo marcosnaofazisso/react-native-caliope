@@ -49,7 +49,6 @@ export default function App() {
             .then(response => {
 
                 setConversa((conversa) => [...conversa, mensagem])
-
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
                         setResposta((resposta) => [...resposta, { mensagem: element.text, tipo: false, imagem: false }])
@@ -61,15 +60,13 @@ export default function App() {
                     }
                 });
 
-            }).then(
-                setMensagem({ mensagem: '' })
-            )
+            }).then(setMensagem({ mensagem: '' }))
             .catch(error => console.log(error))
     }
 
-    const ouvirResposta = (e) => {
+    const ouvirResposta = () => {
         Tts.setDefaultLanguage('pt-BR');
-        const texto = resposta.mensagem;
+        const texto = resposta[resposta.length-1].mensagem;
         Tts.speak(texto);
     };
 
