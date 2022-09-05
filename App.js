@@ -52,7 +52,7 @@ export default function App() {
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
                         setResposta((resposta) => [...resposta, { mensagem: element.text, tipo: false, imagem: false }])
-                        setConversa((conversa) => [...conversa, { mensagem: element.text, tipo: false, imagem: false}])
+                        setConversa((conversa) => [...conversa, { mensagem: element.text, tipo: false, imagem: false }])
                         console.log("ELEMENT ", index, element)
                     } else {
                         setConversa((conversa) => [...conversa, { mensagem: element.source, tipo: false, imagem: true }])
@@ -66,7 +66,7 @@ export default function App() {
 
     const ouvirResposta = () => {
         Tts.setDefaultLanguage('pt-BR');
-        const texto = resposta[resposta.length-1].mensagem;
+        const texto = resposta[resposta.length - 1].mensagem;
         Tts.speak(texto);
     };
 
@@ -115,15 +115,6 @@ export default function App() {
     return (
         <>
             <View style={styles.container}>
-
-                <FlatList
-                    data={conversa}
-                    keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
-                    renderItem={({ item, index }) => (
-                        <Conversation tipo={item.tipo} img={item.imagem} key={index}>{item.mensagem}</Conversation>
-                    )} />
-
-
                 {/* <View style={styles.conversation}>
                     {conversa.length > 0 ? (
                         conversa.map((resposta, index) => (
@@ -132,6 +123,12 @@ export default function App() {
                             </Conversation>
                         ))) : <Text>Nao há nada aqui...</Text>}
                 </View> */}
+                <FlatList
+                    data={conversa}
+                    keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
+                    renderItem={({ item, index }) => (
+                        <Conversation tipo={item.tipo} img={item.imagem} key={index}>{item.mensagem}</Conversation>
+                    )} />
 
                 <View style={styles.textInput}>
                     <TextInput
@@ -157,12 +154,8 @@ export default function App() {
                         <Text>Ouvir resposta</Text>
                     </TouchableOpacity>
                 </View>
-
-
             </View>
             <View>
-
-
             </View>
         </>
     )

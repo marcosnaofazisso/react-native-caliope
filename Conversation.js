@@ -12,9 +12,9 @@ export default function Conversation(props) {
 
   return (
     <View style={styles.baloonContainer}>
-      <View style={styles.text}>
+      {!props.img && <View style={styles.text}>
         <Text style={stylesConversation} >{props.children}</Text>
-      </View>
+      </View>}
       {props.img && <View style={styles.imgContainer}>
         <Image style={styles.imagem} source={{uri:props.children,}} />
       </View>}
