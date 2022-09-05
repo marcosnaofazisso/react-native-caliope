@@ -115,13 +115,13 @@ export default class App extends Component {
                     <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
                 </Pressable>
 
-                <TouchableOpacity style={styles.button2}
+                    <TouchableOpacity style={styles.button2}
                     activeOpacity={0.9}
                     onPressIn={this.startRecording.bind(this)}
                     onPressOut={this.stopRecording.bind(this)}
-                >
-                    <Text>APERTE</Text>
-                </TouchableOpacity>
+                    >
+                        <Text>APERTE</Text>
+                    </TouchableOpacity>
 
 
                 <Pressable style={styles.button2} onPress={this.ouvirResposta.bind(this)}>
