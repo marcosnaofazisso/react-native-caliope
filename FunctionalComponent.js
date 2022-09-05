@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, Text, View, Button } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
@@ -14,9 +14,6 @@ export default function App() {
     const [recording, setRecording] = useState('')
     const [results, setResults] = useState([])
 
-    Voice.onSpeechStart = onSpeechStart;
-    Voice.onSpeechEnd = onSpeechEnd;
-    Voice.onSpeechResults = onSpeechResults;
     
     useEffect(() => {
         const destroyAudio = async() => {
@@ -53,7 +50,6 @@ export default function App() {
         Tts.setDefaultLanguage('pt-BR');
         const texto = resposta2;
         Tts.speak(texto);
-        console.log("Ouvir resposta ===>", e)
     };
 
     onSpeechRecognized = (e) => {
@@ -65,7 +61,6 @@ export default function App() {
     }
     onSpeechEnd = (e) => {
         console.log("stop handler", e)
-        setRecording("audio parado com sucesso.")
     }
 
     onSpeechResults = (e) => {
@@ -93,6 +88,10 @@ export default function App() {
         }
     }
 
+    Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechEnd = onSpeechEnd;
+    Voice.onSpeechResults = onSpeechResults;
+
     return (
         <>
             <View style={styles.container}>
@@ -108,8 +107,14 @@ export default function App() {
                 <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
             </Pressable>
 
-            <Button title='Start Speech to Text' onPress={startRecording} />
-            <Button title='Stop Speech to Text' onPress={stopRecording} />
+            <TouchableOpacity style={styles.button2}
+                    activeOpacity={0.9}
+                    onPressIn={startRecording}
+                    onPressOut={stopRecording}
+                    >
+                        <Text>APERTE</Text>
+                    </TouchableOpacity>
+
             <Pressable style={styles.button2} onPress={ouvirResposta}>
                 <Text style={styles.text}>Ouvir resposta</Text>
             </Pressable>
