@@ -1,87 +1,100 @@
-import React, { Component } from 'react'
-import { Pressable, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react'
+import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, } from 'react-native';
+
+import Conversation from './Conversation';
+
 
 import api from './api';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
-export default class App extends Component {
-    constructor(props) {
-        super(props);
+export default function App() {
 
-        Voice.onSpeechStart = this.onSpeechStart.bind(this);
-        Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
-        Voice.onSpeechError = this.onSpeechError;
-        Voice.onSpeechResults = this.onSpeechResults.bind(this);
+    const [sessionId, setSessionId] = useState('')
+    const [mensagem, setMensagem] = useState({
+        tipo: true,
+        mensagem: '',
+        imagem: null
+    })
+    const [resposta, setResposta] = useState([{
+        tipo: false,
+        mensagem: '',
+        imagem: null
+    }])
+    const [recording, setRecording] = useState('')
+    const [results, setResults] = useState([])
+    const [conversa, setConversa] = useState([])
 
-        this.state = {
-            sessionId: "",
-            mensagem: "Oi Naruto tudo bem",
-            resposta1: "",
-            resposta2: "",
-            recording: "stoppped",
-            recognized: "",
-            result: "",
-
-            results: [],
+    useEffect(() => {
+        const destroyAudio = async () => {
+            const response = await api.get('/api/session')
+            setSessionId(response.data.session_id)
+            console.log("GET Status Code: ", response.status);
+            console.log("SESSION ID: ", response.data.session_id);
         }
-    }
+        destroyAudio()
+        return () => {
+            Voice.destroy().then(Voice.removeAllListeners);
+        }
+    }, [])
 
-    async componentDidMount() {
-        const response = await api.get('/api/session')
-        this.setState({
-            sessionId: response.data.result.session_id,
-        })
-        console.log("SESSION ID RESULT:", response.data.result.session_id);
-        Voice.destroy().then(Voice.removeAllListeners);
-    }
-
-    mandarMensagem = () => {
+    const mandarMensagem = () => {
         api.post('/api/message', {
-            "session_id": this.state.sessionId,
+            "session_id": sessionId,
             "input": {
                 "message_type": "text",
-                "text": this.state.mensagem
+                "text": mensagem.mensagem
             }
         })
             .then(response => {
-                console.log("RESPONSE 1:",
-                    response.data.result.output.generic[1].text +
-                    response.data.result.output.generic[2].text)
-                this.setState({ resposta1: response.data.result.output.generic[1].text })
-                this.setState({ resposta2: response.data.result.output.generic[2].text })
 
-            })
+                setConversa((conversa) => [...conversa, mensagem])
+
+                response.data.output.generic.forEach((element, index) => {
+                    if (!element.source) {
+                        setResposta((resposta) => [...resposta, { mensagem: element.text, tipo: false, imagem: false }])
+                        setConversa((conversa) => [...conversa, { mensagem: element.text, tipo: false, imagem: false}])
+                        console.log("ELEMENT ", index, element)
+                    } else {
+                        setConversa((conversa) => [...conversa, { mensagem: element.source, tipo: false, imagem: true }])
+                        console.log("IMAGEM  ===>>>", element.source)
+                    }
+                });
+
+            }).then(
+                setMensagem({ mensagem: '' })
+            )
             .catch(error => console.log(error))
     }
 
-    ouvirResposta = () => {
+    const ouvirResposta = (e) => {
         Tts.setDefaultLanguage('pt-BR');
-        const texto = this.state.resposta2;
+        const texto = resposta.mensagem;
         Tts.speak(texto);
     };
 
-    onSpeechRecognized = (e) => {
+    const onSpeechRecognized = (e) => {
         console.log("recogninzed", e)
     }
 
-    onSpeechStart = (e) => {
+    const onSpeechStart = (e) => {
         console.log("start handler==>>>", e)
     }
-    onSpeechEnd = (e) => {
+
+    const onSpeechEnd = (e) => {
         console.log("stop handler", e)
-        this.setState({ recording: "audio parado com sucesso." })
     }
 
-    onSpeechResults = (e) => {
+    const onSpeechResults = (e) => {
         let text = e.value[0]
-        this.setState({ results: text })
-        this.setState({ recording: "audio gravado com sucesso." })
+        // setResults(text)
+        // setMensagem({ mensagem: text, tipo: true})      // TODO ----------> corrigir para objeto! 
+        setRecording("audio gravado com sucesso.")
         console.log("speech result handler", e)
     }
 
-    startRecording = async () => {
-        this.setState({ recording: "gravando..." })
+    const startRecording = async () => {
+        setRecording("gravando...")
         try {
             Voice.start('pt-Br')
         } catch (error) {
@@ -89,8 +102,8 @@ export default class App extends Component {
         }
     }
 
-    stopRecording = async () => {
-        this.setState({ recording: "gravacao parada." })
+    const stopRecording = async () => {
+        setRecording("gravacao parada.")
         try {
             Voice.stop()
         } catch (error) {
@@ -98,49 +111,109 @@ export default class App extends Component {
         }
     }
 
-    render() {
-        return (
-            <>
-                <View style={styles.container}>
-                    <Text style={styles.mainTitle}>Naruto App</Text>
-                    <Text style={styles.title}>SESSION ID: {this.state.sessionId}</Text>
-                    <Text style={styles.title}>Resposta: </Text>
-                    <Text style={styles.title}>{this.state.resposta1}</Text>
-                    <Text style={styles.title}>{this.state.resposta2}</Text>
-                    <Text style={styles.title}>Recording: {this.state.recording}</Text>
-                    <Text style={styles.title}>Result: {this.state.result}</Text>
-                    <Text style={styles.title}>Results: {this.state.results}</Text>
-                </View>
-                <Pressable style={styles.button1} onPress={this.mandarMensagem.bind(this)}>
-                    <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
-                </Pressable>
+    Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechEnd = onSpeechEnd;
+    Voice.onSpeechResults = onSpeechResults;
 
-                    <TouchableOpacity style={styles.button2}
-                    activeOpacity={0.9}
-                    onPressIn={this.startRecording.bind(this)}
-                    onPressOut={this.stopRecording.bind(this)}
-                    >
-                        <Text>APERTE</Text>
+    return (
+        <>
+            <View style={styles.container}>
+
+                <FlatList
+                    data={conversa}
+                    keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
+                    renderItem={({ item, index }) => (
+                        <Conversation tipo={item.tipo} img={item.imagem} key={index}>{item.mensagem}</Conversation>
+                    )} />
+
+
+                {/* <View style={styles.conversation}>
+                    {conversa.length > 0 ? (
+                        conversa.map((resposta, index) => (
+                            <Conversation key={index}>
+                                {resposta}
+                            </Conversation>
+                        ))) : <Text>Nao há nada aqui...</Text>}
+                </View> */}
+
+                <View style={styles.textInput}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Digite aqui sua mensagem"
+                        value={mensagem.mensagem}
+                        onChangeText={(text) => setMensagem({ mensagem: text, tipo: true, imagem: false })} />
+
+                </View>
+                <View style={styles.icon}>
+                    <TouchableOpacity onPress={mandarMensagem}>
+                        <Text>Botão enviar</Text>
                     </TouchableOpacity>
 
+                    <TouchableOpacity
+                        activeOpacity={0.9}
+                        onPressIn={startRecording}
+                        onPressOut={stopRecording}>
+                        <Text>Gravar voz</Text>
+                    </TouchableOpacity>
 
-                <Pressable style={styles.button2} onPress={this.ouvirResposta.bind(this)}>
-                    <Text style={styles.text}>Ouvir resposta</Text>
-                </Pressable>
-            </>
-        )
+                    <TouchableOpacity onPress={ouvirResposta}>
+                        <Text>Ouvir resposta</Text>
+                    </TouchableOpacity>
+                </View>
 
-    }
+
+            </View>
+            <View>
+
+
+            </View>
+        </>
+    )
 }
 
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#ECF0F1',
-        margin: 10
+        backgroundColor: "#fff",
+    },
+    conversation: {
+        flex: 2,
+        flexDirection: "column",
+        justifyContent: "flex-start",
+    },
+    baloonContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+    },
+    baloon: {
+        margin: 10,
+        padding: 6,
+        backgroundColor: "black",
+        color: "#fff",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+    },
+    textInput: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingRight: 15,
+        paddingLeft: 10,
+        paddingBottom: 15,
+    },
+    input: {
+        flex: 6,
+        borderBottomColor: "gray",
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 5,
+        marginRight: 10,
+    },
+    icon: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     mainTitle: {
         fontFamily: 'Roboto',
@@ -156,33 +229,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontWeight: 'bold'
     },
-    button1: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'orange',
-        marginTop: 1,
-
-    },
-    button2: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'cyan',
-        marginTop: 1,
-
-    },
     text: {
         fontSize: 20,
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 1,
         color: 'white',
-    }
+    },
 });
