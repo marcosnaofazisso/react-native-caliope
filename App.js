@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Pressable, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
