@@ -102,11 +102,13 @@ export default function App() {
     Voice.onSpeechEnd = onSpeechEnd;
     Voice.onSpeechResults = onSpeechResults;
 
+
     return (
         <>
             <View style={styles.container}>
 
                 <FlatList
+                    // initialScrollIndex={-1}
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
                     renderItem={({ item, index }) => (

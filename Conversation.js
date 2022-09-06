@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   baloonUsuario: {
     margin: 10,
     padding: 6,
-    backgroundColor: "green",
+    backgroundColor: "#1fd655",
     color: "#fff",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
