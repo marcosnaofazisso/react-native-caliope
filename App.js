@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, } from 'react-native';
+import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image } from 'react-native';
 
 import Conversation from './Conversation';
-
 
 import api from './api';
 import Voice from '@react-native-community/voice';
@@ -11,18 +10,9 @@ import Tts from 'react-native-tts';
 export default function App() {
 
     const [sessionId, setSessionId] = useState('')
-    const [mensagem, setMensagem] = useState({
-        tipo: true,
-        mensagem: '',
-        imagem: null
-    })
-    const [resposta, setResposta] = useState([{
-        tipo: false,
-        mensagem: '',
-        imagem: null
-    }])
-    const [recording, setRecording] = useState('')
-    const [results, setResults] = useState([])
+    const [audioEnviado, setAudioEnviado] = useState(false)
+    const [mensagem, setMensagem] = useState({})
+    const [resposta, setResposta] = useState([{}])
     const [conversa, setConversa] = useState([])
 
     useEffect(() => {
@@ -53,14 +43,12 @@ export default function App() {
                     if (!element.source) {
                         setResposta((resposta) => [...resposta, { mensagem: element.text, tipo: false, imagem: false }])
                         setConversa((conversa) => [...conversa, { mensagem: element.text, tipo: false, imagem: false }])
-                        console.log("ELEMENT ", index, element)
                     } else {
                         setConversa((conversa) => [...conversa, { mensagem: element.source, tipo: false, imagem: true }])
-                        console.log("IMAGEM  ===>>>", element.source)
                     }
                 });
 
-            }).then(setMensagem({ mensagem: '' }))
+            }).then(setMensagem({}))
             .catch(error => console.log(error))
     }
 
@@ -83,15 +71,18 @@ export default function App() {
     }
 
     const onSpeechResults = (e) => {
-        let text = e.value[0]
-        // setResults(text)
-        // setMensagem({ mensagem: text, tipo: true})      // TODO ----------> corrigir para objeto! 
-        setRecording("audio gravado com sucesso.")
-        console.log("speech result handler", e)
+        let text = e.value[e.value.length - 1]
+        setMensagem({ mensagem: text, tipo: true, imagem: false }),
+            setAudioEnviado(current => !current),
+            console.log("speech result handler", e)
     }
 
+    useEffect(() => {
+        console.log("AUDIO ENVIADO! ", audioEnviado)
+        mandarMensagem()
+    }, [audioEnviado])
+
     const startRecording = async () => {
-        setRecording("gravando...")
         try {
             Voice.start('pt-Br')
         } catch (error) {
@@ -100,7 +91,6 @@ export default function App() {
     }
 
     const stopRecording = async () => {
-        setRecording("gravacao parada.")
         try {
             Voice.stop()
         } catch (error) {
@@ -115,14 +105,7 @@ export default function App() {
     return (
         <>
             <View style={styles.container}>
-                {/* <View style={styles.conversation}>
-                    {conversa.length > 0 ? (
-                        conversa.map((resposta, index) => (
-                            <Conversation key={index}>
-                                {resposta}
-                            </Conversation>
-                        ))) : <Text>Nao há nada aqui...</Text>}
-                </View> */}
+
                 <FlatList
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
@@ -136,22 +119,29 @@ export default function App() {
                         placeholder="Digite aqui sua mensagem"
                         value={mensagem.mensagem}
                         onChangeText={(text) => setMensagem({ mensagem: text, tipo: true, imagem: false })} />
+                    <View style={styles.icon}>
+                        <TouchableOpacity onPress={mandarMensagem}>
+                            {/* <Text>Enviar</Text> */}
+                            <Image style={styles.sendIcon} source={require('./assets/send.png')} />
+                        </TouchableOpacity>
 
+                        <TouchableOpacity
+                            activeOpacity={0.9}
+                            onPressIn={startRecording}
+                            onPressOut={stopRecording}>
+                            {/* <Text>Gravar voz</Text> */}
+                            <Image style={styles.microphoneIcon} source={require('./assets/microphone.png')} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={ouvirResposta}>
+                            {/* <Text>Ouvir resposta</Text> */}
+                            <Image style={styles.listenIcon} source={require('./assets/listen.png')} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={styles.icon}>
-                    <TouchableOpacity onPress={mandarMensagem}>
-                        <Text>Botão enviar</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        activeOpacity={0.9}
-                        onPressIn={startRecording}
-                        onPressOut={stopRecording}>
-                        <Text>Gravar voz</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={ouvirResposta}>
-                        <Text>Ouvir resposta</Text>
+                <View style={styles.clearField}>
+                    <TouchableOpacity onPress={() => setConversa([])}>
+                        <Text style={styles.clearChat}>Limpar conversa</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -188,8 +178,9 @@ const styles = StyleSheet.create({
     textInput: {
         flexDirection: "row",
         alignItems: "center",
-        paddingRight: 15,
-        paddingLeft: 10,
+        paddingTop: 15, // original value: not existed
+        paddingRight: 90, //original value: 15
+        paddingLeft: 15, //original value: 10
         paddingBottom: 15,
     },
     input: {
@@ -225,5 +216,30 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 1,
         color: 'white',
+    },
+    microphoneIcon: {
+        color: 'black',
+        marginRight: 5,
+        width: 32,
+        height: 32,
+    },
+    sendIcon: {
+        color: 'black',
+        marginRight: 5,
+        width: 32,
+        height: 32,
+    },
+    listenIcon: {
+        color: 'black',
+        marginRight: 5,
+        width: 32,
+        height: 32,
+    },
+    clearField: {
+        alignItems: "center",
+    },
+    clearChat: {
+        fontWeight: 'bold',
+        marginBottom: 15,
     },
 });
