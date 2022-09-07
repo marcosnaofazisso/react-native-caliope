@@ -7,6 +7,10 @@ import api from './api';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
+
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['new NativeEventEmitter']);
+
 export default function App() {
 
     const [sessionId, setSessionId] = useState('')
@@ -14,6 +18,8 @@ export default function App() {
     const [mensagem, setMensagem] = useState({})
     const [resposta, setResposta] = useState([{}])
     const [conversa, setConversa] = useState([])
+
+    const [boasVindas] = useState("Oi, eu sou Calíope. 🥰")
 
     useEffect(() => {
         const destroyAudio = async () => {
@@ -41,10 +47,10 @@ export default function App() {
                 setConversa((conversa) => [...conversa, mensagem])
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
-                        setResposta((resposta) => [...resposta, { mensagem: element.text, tipo: false, imagem: false }])
-                        setConversa((conversa) => [...conversa, { mensagem: element.text, tipo: false, imagem: false }])
+                        setResposta((resposta) => [...resposta, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
+                        setConversa((conversa) => [...conversa, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
                     } else {
-                        setConversa((conversa) => [...conversa, { mensagem: element.source, tipo: false, imagem: true }])
+                        setConversa((conversa) => [...conversa, { mensagem: element.source, mensagemDoUsuario: false, imagem: true }])
                     }
                 });
 
@@ -72,7 +78,7 @@ export default function App() {
 
     const onSpeechResults = (e) => {
         let text = e.value[e.value.length - 1]
-        setMensagem({ mensagem: text, tipo: true, imagem: false }),
+        setMensagem({ mensagem: text, mensagemDoUsuario: true, imagem: false }),
             setAudioEnviado(current => !current),
             console.log("speech result handler", e)
     }
@@ -107,12 +113,12 @@ export default function App() {
         <>
             <View style={styles.container}>
 
+                <Conversation tipo={false}>{boasVindas}</Conversation>
                 <FlatList
-                    // initialScrollIndex={-1}
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
                     renderItem={({ item, index }) => (
-                        <Conversation tipo={item.tipo} img={item.imagem} key={index}>{item.mensagem}</Conversation>
+                        <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index}>{item.mensagem}</Conversation>
                     )} />
 
                 <View style={styles.textInput}>
@@ -120,10 +126,9 @@ export default function App() {
                         style={styles.input}
                         placeholder="Digite aqui sua mensagem"
                         value={mensagem.mensagem}
-                        onChangeText={(text) => setMensagem({ mensagem: text, tipo: true, imagem: false })} />
+                        onChangeText={(text) => setMensagem({ mensagem: text, mensagemDoUsuario: true, imagem: false })} />
                     <View style={styles.icon}>
                         <TouchableOpacity onPress={mandarMensagem}>
-                            {/* <Text>Enviar</Text> */}
                             <Image style={styles.sendIcon} source={require('./assets/send.png')} />
                         </TouchableOpacity>
 
@@ -131,12 +136,10 @@ export default function App() {
                             activeOpacity={0.9}
                             onPressIn={startRecording}
                             onPressOut={stopRecording}>
-                            {/* <Text>Gravar voz</Text> */}
                             <Image style={styles.microphoneIcon} source={require('./assets/microphone.png')} />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={ouvirResposta}>
-                            {/* <Text>Ouvir resposta</Text> */}
                             <Image style={styles.listenIcon} source={require('./assets/listen.png')} />
                         </TouchableOpacity>
                     </View>
@@ -180,6 +183,7 @@ const styles = StyleSheet.create({
     textInput: {
         flexDirection: "row",
         alignItems: "center",
+        backgroundColor: "#F5F5F5",
         paddingTop: 15, // original value: not existed
         paddingRight: 90, //original value: 15
         paddingLeft: 15, //original value: 10
@@ -192,6 +196,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 5,
         marginRight: 10,
+        backgroundColor: "#FFF",
+
     },
     icon: {
         flex: 1,
@@ -239,6 +245,8 @@ const styles = StyleSheet.create({
     },
     clearField: {
         alignItems: "center",
+        backgroundColor: "#F5F5F5",
+
     },
     clearChat: {
         fontWeight: 'bold',
