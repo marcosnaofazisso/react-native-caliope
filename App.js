@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image } from 'react-native';
+import { Pressable, StatusBar, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image } from 'react-native';
 
 import Conversation from './Conversation';
+import MenuBar from './MenuBar';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
@@ -112,7 +113,8 @@ export default function App() {
     return (
         <>
             <View style={styles.container}>
-
+                <StatusBar style="light" backgroundColor="black" />
+                <MenuBar />
                 <Conversation tipo={false}>{boasVindas}</Conversation>
                 <FlatList
                     data={conversa}
