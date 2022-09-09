@@ -1,87 +1,95 @@
-import React, { Component } from 'react'
-import { Pressable, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react'
+import { Pressable, StatusBar, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image } from 'react-native';
+
+import Conversation from './Conversation';
+import MenuBar from './MenuBar';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
-export default class App extends Component {
-    constructor(props) {
-        super(props);
 
-        Voice.onSpeechStart = this.onSpeechStart.bind(this);
-        Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
-        Voice.onSpeechError = this.onSpeechError;
-        Voice.onSpeechResults = this.onSpeechResults.bind(this);
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
-        this.state = {
-            sessionId: "",
-            mensagem: "Oi Naruto tudo bem",
-            resposta1: "",
-            resposta2: "",
-            recording: "stoppped",
-            recognized: "",
-            result: "",
+export default function App() {
 
-            results: [],
+    const [sessionId, setSessionId] = useState('')
+    const [audioEnviado, setAudioEnviado] = useState(false)
+    const [mensagem, setMensagem] = useState({})
+    const [resposta, setResposta] = useState([{}])
+    const [conversa, setConversa] = useState([])
+
+    const [boasVindas] = useState("Oi, eu sou Calíope. 🥰")
+
+    useEffect(() => {
+        const destroyAudio = async () => {
+            const response = await api.get('/api/session')
+            setSessionId(response.data.session_id)
+            console.log("GET Status Code: ", response.status);
+            console.log("SESSION ID: ", response.data.session_id);
         }
-    }
+        destroyAudio()
+        return () => {
+            Voice.destroy().then(Voice.removeAllListeners);
+        }
+    }, [])
 
-    async componentDidMount() {
-        const response = await api.get('/api/session')
-        this.setState({
-            sessionId: response.data.result.session_id,
-        })
-        console.log("SESSION ID RESULT:", response.data.result.session_id);
-        Voice.destroy().then(Voice.removeAllListeners);
-    }
-
-    mandarMensagem = () => {
+    const mandarMensagem = () => {
         api.post('/api/message', {
-            "session_id": this.state.sessionId,
+            "session_id": sessionId,
             "input": {
                 "message_type": "text",
-                "text": this.state.mensagem
+                "text": mensagem.mensagem
             }
         })
             .then(response => {
-                console.log("RESPONSE 1:",
-                    response.data.result.output.generic[1].text +
-                    response.data.result.output.generic[2].text)
-                this.setState({ resposta1: response.data.result.output.generic[1].text })
-                this.setState({ resposta2: response.data.result.output.generic[2].text })
 
-            })
+                setConversa((conversa) => [...conversa, mensagem])
+                response.data.output.generic.forEach((element, index) => {
+                    if (!element.source) {
+                        setResposta((resposta) => [...resposta, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
+                        setConversa((conversa) => [...conversa, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
+                    } else {
+                        setConversa((conversa) => [...conversa, { mensagem: element.source, mensagemDoUsuario: false, imagem: true }])
+                    }
+                });
+
+            }).then(setMensagem({}))
             .catch(error => console.log(error))
     }
 
-    ouvirResposta = () => {
+    const ouvirResposta = () => {
         Tts.setDefaultLanguage('pt-BR');
-        const texto = this.state.resposta2;
+        const texto = resposta[resposta.length - 1].mensagem;
         Tts.speak(texto);
     };
 
-    onSpeechRecognized = (e) => {
+    const onSpeechRecognized = (e) => {
         console.log("recogninzed", e)
     }
 
-    onSpeechStart = (e) => {
+    const onSpeechStart = (e) => {
         console.log("start handler==>>>", e)
     }
-    onSpeechEnd = (e) => {
+
+    const onSpeechEnd = (e) => {
         console.log("stop handler", e)
-        this.setState({ recording: "audio parado com sucesso." })
     }
 
-    onSpeechResults = (e) => {
-        let text = e.value[0]
-        this.setState({ results: text })
-        this.setState({ recording: "audio gravado com sucesso." })
-        console.log("speech result handler", e)
+    const onSpeechResults = (e) => {
+        let text = e.value[e.value.length - 1]
+        setMensagem({ mensagem: text, mensagemDoUsuario: true, imagem: false }),
+            setAudioEnviado(current => !current),
+            console.log("speech result handler", e)
     }
 
-    startRecording = async () => {
-        this.setState({ recording: "gravando..." })
+    useEffect(() => {
+        console.log("AUDIO ENVIADO! ", audioEnviado)
+        mandarMensagem()
+    }, [audioEnviado])
+
+    const startRecording = async () => {
         try {
             Voice.start('pt-Br')
         } catch (error) {
@@ -89,8 +97,7 @@ export default class App extends Component {
         }
     }
 
-    stopRecording = async () => {
-        this.setState({ recording: "gravacao parada." })
+    const stopRecording = async () => {
         try {
             Voice.stop()
         } catch (error) {
@@ -98,49 +105,106 @@ export default class App extends Component {
         }
     }
 
-    render() {
-        return (
-            <>
-                <View style={styles.container}>
-                    <Text style={styles.mainTitle}>Naruto App</Text>
-                    <Text style={styles.title}>SESSION ID: {this.state.sessionId}</Text>
-                    <Text style={styles.title}>Resposta: </Text>
-                    <Text style={styles.title}>{this.state.resposta1}</Text>
-                    <Text style={styles.title}>{this.state.resposta2}</Text>
-                    <Text style={styles.title}>Recording: {this.state.recording}</Text>
-                    <Text style={styles.title}>Result: {this.state.result}</Text>
-                    <Text style={styles.title}>Results: {this.state.results}</Text>
+    Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechEnd = onSpeechEnd;
+    Voice.onSpeechResults = onSpeechResults;
+
+
+    return (
+        <>
+            <View style={styles.container}>
+                <StatusBar style="light" backgroundColor="black" />
+                <MenuBar />
+                <Conversation tipo={false}>{boasVindas}</Conversation>
+                <FlatList
+                    data={conversa}
+                    keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
+                    renderItem={({ item, index }) => (
+                        <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index}>{item.mensagem}</Conversation>
+                    )} />
+
+                <View style={styles.textInput}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Digite aqui sua mensagem"
+                        value={mensagem.mensagem}
+                        onChangeText={(text) => setMensagem({ mensagem: text, mensagemDoUsuario: true, imagem: false })} />
+                    <View style={styles.icon}>
+                        <TouchableOpacity onPress={mandarMensagem}>
+                            <Image style={styles.sendIcon} source={require('./assets/send.png')} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            activeOpacity={0.9}
+                            onPressIn={startRecording}
+                            onPressOut={stopRecording}>
+                            <Image style={styles.microphoneIcon} source={require('./assets/microphone.png')} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={ouvirResposta}>
+                            <Image style={styles.listenIcon} source={require('./assets/listen.png')} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <Pressable style={styles.button1} onPress={this.mandarMensagem.bind(this)}>
-                    <Text style={styles.text}>Mandar mensagem para o Naruto</Text>
-                </Pressable>
-
-                    <TouchableOpacity style={styles.button2}
-                    activeOpacity={0.9}
-                    onPressIn={this.startRecording.bind(this)}
-                    onPressOut={this.stopRecording.bind(this)}
-                    >
-                        <Text>APERTE</Text>
+                <View style={styles.clearField}>
+                    <TouchableOpacity onPress={() => setConversa([])}>
+                        <Text style={styles.clearChat}>Limpar conversa</Text>
                     </TouchableOpacity>
-
-
-                <Pressable style={styles.button2} onPress={this.ouvirResposta.bind(this)}>
-                    <Text style={styles.text}>Ouvir resposta</Text>
-                </Pressable>
-            </>
-        )
-
-    }
+                </View>
+            </View>
+            <View>
+            </View>
+        </>
+    )
 }
 
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#ECF0F1',
-        margin: 10
+        backgroundColor: "#fff",
+    },
+    conversation: {
+        flex: 2,
+        flexDirection: "column",
+        justifyContent: "flex-start",
+    },
+    baloonContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+    },
+    baloon: {
+        margin: 10,
+        padding: 6,
+        backgroundColor: "black",
+        color: "#fff",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+    },
+    textInput: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#F5F5F5",
+        paddingTop: 15, // original value: not existed
+        paddingRight: 90, //original value: 15
+        paddingLeft: 15, //original value: 10
+        paddingBottom: 15,
+    },
+    input: {
+        flex: 6,
+        borderBottomColor: "gray",
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 5,
+        marginRight: 10,
+        backgroundColor: "#FFF",
+
+    },
+    icon: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     mainTitle: {
         fontFamily: 'Roboto',
@@ -156,33 +220,38 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontWeight: 'bold'
     },
-    button1: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'orange',
-        marginTop: 1,
-
-    },
-    button2: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 50,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 5,
-        backgroundColor: 'cyan',
-        marginTop: 1,
-
-    },
     text: {
         fontSize: 20,
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 1,
         color: 'white',
-    }
+    },
+    microphoneIcon: {
+        color: 'black',
+        marginRight: 5,
+        width: 32,
+        height: 32,
+    },
+    sendIcon: {
+        color: 'black',
+        marginRight: 5,
+        width: 32,
+        height: 32,
+    },
+    listenIcon: {
+        color: 'black',
+        marginRight: 5,
+        width: 32,
+        height: 32,
+    },
+    clearField: {
+        alignItems: "center",
+        backgroundColor: "#F5F5F5",
+
+    },
+    clearChat: {
+        fontWeight: 'bold',
+        marginBottom: 15,
+    },
 });
