@@ -10,7 +10,7 @@ Criação de um app de chat usando comunicação de voz e texto atravez de um co
 * [Marcos Maciel](https://github.com/Marcos26-tech) || RM: 88267
 
 # Demo
-<img src="/demo/demo.caliope.gif" height="200" width="400">
+<img src="/demo/demo.caliope.gif" height="800" width="400">
 
 # Tutorial
 npm install
