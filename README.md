@@ -13,10 +13,12 @@ Criação de um app de chat usando comunicação de voz e texto atravez de um co
 <img src="/demo/demo.caliope.gif" height="800" width="400">
 
 # Tutorial
-npm install
-npm i @react-native-community/voice
-npm i axios
-npm i react-native-tts
+### npm install
+
+### npm i @react-native-community/voice
+
+### npm i axios
+### npm i react-native-tts
 
 # como rodar
 npx react-native run-android
