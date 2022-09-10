@@ -36,15 +36,15 @@ deixa o seu like no video :)
 
 ### Algumas conversas possiveis que o chatbot "Caliope" pode responder:
 
-Oi, tudo bem?
-Preciso de sua ajuda Caliope.
-Quanto tempo para a entrega de minha encomenda?
-Meu pedido está atrasado.
-Solução de problemas
-Vende produtos 
-Desejo comprar roupas feminina
-Como posso ter descontos?
-Falar com um agente Humano
-Despedida; obrigado pela ajuda, tchau etc...
+###### Oi, tudo bem?
+###### Preciso de sua ajuda Caliope.
+###### Quanto tempo para a entrega de minha encomenda?
+###### Meu pedido está atrasado.
+###### Solução de problemas
+###### Vende produtos 
+###### Desejo comprar roupas feminina
+###### Como posso ter descontos?
+###### Falar com um agente Humano
+###### Despedida; obrigado pela ajuda, tchau etc...
 
 ## Thank you!
