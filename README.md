@@ -1,6 +1,6 @@
-# Projeto feito Challenge da disciplina HYBRID MOBILE APP DEVELOPMENT do 2º ano da FIAP.
+# Projeto feito Challenge da disciplina DISRUPTIVE ARCHITECTURES: IOT, IOB & IA do 2º ano da FIAP.
 
-Criação de um app de chat usando comunicação de voz e texto atravez de um conecção com o um chatbot criado no watson assintant da IBM.
+Criação de um aplicativo usando react-native para um chat usando comunicação de voz e texto atravez de um conexão com o um chatbot criado no watson assintant da IBM.
 
 ### Developers: 
 * [Marcos Vinicius Ferreira](https://github.com/marcosnaofazisso) || RM: 86904
@@ -22,5 +22,17 @@ Criação de um app de chat usando comunicação de voz e texto atravez de um co
 
 # como rodar
 npx react-native run-android
+
+
+## Links do projeto
+
+#### Youtube : https://www.youtube.com/watch?v=699UK76xLS0
+
+deixa o seu like no video :)
+### Canva: https://www.canva.com/design/DAFKXsaxy-o/lHj31HLF7BV71IeXKMfANw/view?utm_content=DAFKXsaxy-o&utm_campaign=designshare&utm_medium=link&utm_source=publishpresent#2
+
+### Api no Heroku: https://caliope-watson.herokuapp.com/,
+
+
 
 ## Thank you!
