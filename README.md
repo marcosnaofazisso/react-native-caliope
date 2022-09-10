@@ -31,8 +31,20 @@ npx react-native run-android
 deixa o seu like no video :)
 ### Canva: https://www.canva.com/design/DAFKXsaxy-o/lHj31HLF7BV71IeXKMfANw/view?utm_content=DAFKXsaxy-o&utm_campaign=designshare&utm_medium=link&utm_source=publishpresent#2
 
-### Api no Heroku: https://caliope-watson.herokuapp.com/,
+### Api no Heroku: https://caliope-watson.herokuapp.com/
 
 
+### Algumas conversas possiveis que o chatbot "Caliope" pode responder:
+
+###### Oi, tudo bem?
+###### Preciso de sua ajuda Caliope.
+###### Quanto tempo para a entrega de minha encomenda?
+###### Meu pedido está atrasado.
+###### Solução de problemas
+###### Vende produtos 
+###### Desejo comprar roupas feminina
+###### Como posso ter descontos?
+###### Falar com um agente Humano
+###### Despedida; obrigado pela ajuda, tchau etc...
 
 ## Thank you!
