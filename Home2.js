@@ -5,9 +5,13 @@ export default function Home2({ navigation }) {
     return (
         <View style={styles.container}>
             <Text>Home 2</Text>
-            <Text>Você está na home 2...</Text>
+            <Text> </Text>
+            <Text> </Text>
+            <Text>Detalhes do produto....</Text>
+            <Text> </Text>
+            <Text> </Text>
             <Button
-                title="Ir para Home3"
+                title="Ver meu Carrinho..."
                 onPress={() => navigation.navigate('Home3')} />
         </View>
     )
