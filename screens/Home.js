@@ -9,8 +9,12 @@ import {
     StatusBar,
     Button
 } from "react-native";
-import RoupaBox from './components/RoupaBox.js'
-import { NEWROUPAS } from "./data/data.js";
+
+
+import RoupaBox from '../components/RoupaBox.js'
+import { NEWROUPAS } from "../data/data.js";
+
+import BotaoChat from "../components/BotaoChat.js";
 
 export default function Home({ navigation }) {
     const [state, setState] = useState({
@@ -65,7 +69,7 @@ export default function Home({ navigation }) {
         };
 
         function pressHandler() {
-            navigation.navigate("RoupaInfos", { ...roupaItemProps });
+            navigation.navigate("Home2", { ...roupaItemProps });
         }
 
         if (roupaItemProps.type === "tops" && state.tops) {
@@ -128,14 +132,8 @@ export default function Home({ navigation }) {
                 ) : (
                     <Text>Nenhum item encontrado 😔</Text>
                 )}
-                <Text> </Text>
-                <Text> </Text>
-                <Button
-                    title="Ver produto..."
-                    onPress={() => navigation.navigate('Home2')} />
-                <Text> </Text>
-                <Text> </Text>
             </View>
+            <BotaoChat onPress={() => navigation.navigate('Caliope')} />
         </View>
     );
 }
