@@ -29,7 +29,7 @@ function Tabs() {
 function HomeStack() {
     return (
         <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={Home} options={{ title: 'Tela inicial Home' }} />
+            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Home2" component={Home2} options={{ title: 'Tela Home 2' }} />
             <Stack.Screen name="Home3" component={Home3} options={{ title: 'Tela Home 3' }} />
             <Stack.Screen name="Home4" component={Home4} options={{ title: 'Tela Home 4' }} />
