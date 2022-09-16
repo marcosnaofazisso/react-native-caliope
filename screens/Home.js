@@ -12,7 +12,7 @@ import {
 
 
 import RoupaBox from '../components/RoupaBox.js'
-import { NEWROUPAS } from "../data/data.js";
+import { inventario } from "../data/data.js";
 
 import BotaoChat from "../components/BotaoChat.js";
 
@@ -125,7 +125,7 @@ export default function Home({ navigation }) {
             <View style={styles.imageContainer}>
                 {!state.empty ? (
                     <FlatList
-                        data={NEWROUPAS}
+                        data={inventario}
                         keyExtractor={(item) => item.id}
                         renderItem={renderRoupa}
                     />

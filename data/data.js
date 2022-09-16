@@ -39,7 +39,7 @@ export const ROUPAS = [
   ),
 ];
 
-export const NEWROUPAS = [
+export const inventario = [
   new Roupa(
     1,
     "Tunica Creme",
@@ -78,4 +78,4 @@ export const NEWROUPAS = [
   ),
 ];
 
-export const NEWROUPAS2 = [];
+export const carrinho = [];

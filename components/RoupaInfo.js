@@ -1,7 +1,28 @@
 import React from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
+import { inventario, carrinho } from "../data/data";
+
 export default function RoupaInfo(props) {
+
+    const produtoAtual = {
+        id: props.id,
+        title: props.title,
+        price: props.price,
+        photo: props.photo,
+        description: props.description,
+        discount: props.discount,
+        type: props.type
+    };
+
+    function adicionarItemAoCarrinho() {
+        carrinho.push(produtoAtual);
+        inventario.splice(produtoAtual, 1);
+        // console.log("INVENTÁRIO:", inventario);
+        // console.log("CARRINHO:", carrinho);
+
+    }
+
     return (
         <View style={styles.imgContainer}>
             <View style={styles.singularContainer}>
@@ -15,8 +36,13 @@ export default function RoupaInfo(props) {
                         </Text>
                     </View>
                     {!props.car && (
-                        <TouchableOpacity style={styles.comprar} onPress={props.onPress}>
+                        <TouchableOpacity style={styles.comprar} onPress={adicionarItemAoCarrinho}>
                             <Text style={styles.comprarTxt}>Comprar</Text>
+                        </TouchableOpacity>
+                    )}
+                    {!props.car && (
+                        <TouchableOpacity style={styles.comprar} onPress={props.onPress}>
+                            <Text style={styles.comprarTxt}>Ir para o Carrinho</Text>
                         </TouchableOpacity>
                     )}
                     {props.car2 && (
