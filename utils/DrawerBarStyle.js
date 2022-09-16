@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, Image } from "react-native";
 
 export const drawerOptionsLoja = (navigation) => {
     return {
@@ -11,15 +11,16 @@ export const drawerOptionsLoja = (navigation) => {
 
         headerRight: () => {
             return (
-                <TouchableOpacity>
-                    <Text>Aqui seria um icone</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Home3")}>
+                    <Image style={{ height: 20, width: 20 }} source={require('../assets/carrinho.png')} />
+
                 </TouchableOpacity>
             );
         },
         headerRightContainerStyle: { marginRight: 20 },
 
         drawerIcon: ({ color, size }) => {
-            return <Text>Aqui seria um icone</Text>;
+            return <Text style={{ color: 'white' }}>Aqui seria um icone</Text>;
 
         },
         drawerLabel: "Home",

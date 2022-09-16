@@ -9,7 +9,6 @@ import { inventario, carrinho } from "../data/data";
 export default function RoupaInfos({ navigation, route }) {
 
   function onPressNavigation() {
-    console.log("Navegando para a RoupaInfo.....................")
     navigation.navigate("Home3");
   }
 

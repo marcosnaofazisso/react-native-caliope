@@ -35,6 +35,11 @@ export default function RoupaInfo(props) {
                             Descrição: {props.description}
                         </Text>
                     </View>
+                    <View style={{ flexDirection: "row" }}>
+                        <Text style={{ flex: 1, flexWrap: "wrap" }}>
+                            Preço: R$ {props.price}
+                        </Text>
+                    </View>
                     {!props.car && (
                         <TouchableOpacity style={styles.comprar} onPress={adicionarItemAoCarrinho}>
                             <Text style={styles.comprarTxt}>Comprar</Text>
