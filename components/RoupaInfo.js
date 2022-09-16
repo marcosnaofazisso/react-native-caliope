@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { inventario, carrinho } from "../data/data";
 
 export default function RoupaInfo(props) {
+
+    const [itemComprado, setItemComprado] = useState(false)
 
     const produtoAtual = {
         id: props.id,
@@ -16,6 +18,7 @@ export default function RoupaInfo(props) {
     };
 
     function adicionarItemAoCarrinho() {
+        setItemComprado(current => !current)
         carrinho.push(produtoAtual);
         inventario.splice(produtoAtual, 1);
         // console.log("INVENTÁRIO:", inventario);
@@ -40,12 +43,12 @@ export default function RoupaInfo(props) {
                             Preço: R$ {props.price}
                         </Text>
                     </View>
-                    {!props.car && (
+                    {!props.car && !itemComprado && (
                         <TouchableOpacity style={styles.comprar} onPress={adicionarItemAoCarrinho}>
                             <Text style={styles.comprarTxt}>Comprar</Text>
                         </TouchableOpacity>
                     )}
-                    {!props.car && (
+                    {!props.car && itemComprado && (
                         <TouchableOpacity style={styles.comprar} onPress={props.onPress}>
                             <Text style={styles.comprarTxt}>Ir para o Carrinho</Text>
                         </TouchableOpacity>

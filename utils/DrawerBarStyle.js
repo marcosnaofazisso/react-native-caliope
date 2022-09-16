@@ -13,7 +13,6 @@ export const drawerOptionsLoja = (navigation) => {
             return (
                 <TouchableOpacity onPress={() => navigation.navigate("Home3")}>
                     <Image style={{ height: 20, width: 20 }} source={require('../assets/carrinho.png')} />
-
                 </TouchableOpacity>
             );
         },

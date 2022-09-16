@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList } from "react-native";
 
-
 import BotaoChat from "../components/BotaoChat";
 import RoupaInfos from "../components/RoupaInfo";
 
@@ -10,8 +9,8 @@ import { inventario, carrinho } from "../data/data";
 
 export default function Carrinho({ navigation, route }) {
 
-    const [data] = useState(inventario); 
-    const [data2, setData2] = useState(carrinho); 
+    const [listaInventario] = useState(inventario);
+    const [listaCarrinho, setData2] = useState(carrinho);
     const [renderizarCarrinho, setRenderizarCarrinho] = useState(false)
 
     const renderRoupa = (itemData) => {
@@ -27,14 +26,14 @@ export default function Carrinho({ navigation, route }) {
         };
 
         function onPress() {
-            var index = data2
+            var index = listaCarrinho
                 .map((x) => {
                     return x.id;
                 })
                 .indexOf(roupaItemProps.id);
 
-            data.splice(roupaItemProps.id - 1, 0, data2[index]);
-            data2.splice(index, 1); //o splice limpa o item da lista (carrinho), então é essencial pro funcionamento
+            listaInventario.splice(roupaItemProps.id - 1, 0, listaCarrinho[index]);
+            listaCarrinho.splice(index, 1); //o splice limpa o item da lista (carrinho), então é essencial pro funcionamento
             setRenderizarCarrinho(current => !current) //controla a renderização da tela
 
         }
@@ -50,32 +49,32 @@ export default function Carrinho({ navigation, route }) {
     };
 
     function limparCarrinho() {
-        data2.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
-            var index = data2
+        listaCarrinho.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
+            var index = listaCarrinho
                 .map((x) => {
                     return x.id;
                 })
                 .indexOf(itemDoCarrinho.id);
-            data.splice(itemDoCarrinho.id - 1, 0, data2[index]);
+            listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
 
         });
-        const filterData2 = data2.splice(0, data2.length); //limpa o carrinho
-        setData2({ data2: filterData2 }); //seta o carrinho
+        const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
+        setData2({ listaCarrinho: filterData2 }); //seta o carrinho
     }
 
     return (
         <View style={styles.container}>
             <Text style={styles.info}>Produtos do Carrinho</Text>
-            {data2.length > 0 ? <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
+            {listaCarrinho.length > 0 ? <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
                 <Text style={styles.buttonTxt}>Limpar Carrinho</Text>
             </TouchableOpacity>
                 : null}
             <FlatList
-                data={data2}
+                data={listaCarrinho}
                 keyExtractor={(item) => item.id}
                 renderItem={renderRoupa}
             />
-            <BotaoChat navigation={() => navigation.navigate("Home")} />
+            <BotaoChat navigation={() => navigation.navigate("Caliope")} />
         </View>
     );
 }
