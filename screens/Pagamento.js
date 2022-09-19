@@ -32,15 +32,18 @@ export default function Pagamento({ navigation, route }) {
     }
 
     return (
-        <View>
-            <Text>Detalhes do Pedido</Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Detalhes do Pedido</Text>
             <Text></Text>
             {pedidoCompleto.map((item) => {
                 return (
                     <Text>1 x {item.title}</Text>
                 )
             })}
-            <Text>Preço: R$ {JSON.stringify(totalPedido)}</Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text>Total do Pedido: R$ {JSON.stringify(totalPedido)}</Text>
             <Text></Text>
             <Text>Você receberá as informações de pagamento por email, combinado?</Text>
             <Text></Text>
@@ -58,6 +61,11 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         backgroundColor: "#FAF8F8",
         // fontFamily: "Roboto",
+        padding: 15,
+    },
+    title: {
+        fontSize: 15,
+        fontWeight: 'bold',
     },
     button: {
         backgroundColor: "black",

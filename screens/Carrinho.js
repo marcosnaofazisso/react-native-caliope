@@ -65,13 +65,16 @@ export default function Carrinho({ navigation, route }) {
     return (
         <View style={styles.container}>
             <Text style={styles.info}>Produtos do Carrinho</Text>
-            {listaCarrinho.length > 0 ? <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
-                <Text style={styles.buttonTxt}>Limpar Carrinho</Text>
-            </TouchableOpacity>
+            {listaCarrinho.length > 0 ?
+                <View>
+                    <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
+                        <Text style={styles.buttonTxt}>Limpar Carrinho</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home4', { pedido: listaCarrinho })}>
+                        <Text style={styles.buttonTxt}>Finalizar Pedido</Text>
+                    </TouchableOpacity>
+                </View>
                 : null}
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home4', { pedido: listaCarrinho })}>
-                <Text style={styles.buttonTxt}>Finalizar Pedido</Text>
-            </TouchableOpacity>
             <FlatList
                 data={listaCarrinho}
                 keyExtractor={(item) => item.id}

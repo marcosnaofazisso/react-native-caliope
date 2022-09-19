@@ -1,4 +1,5 @@
 import React from "react";
+import { Text } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -28,9 +29,28 @@ import RoupaInfo from "./components/RoupaInfo";
 
 function Tabs() {
     return (
-        <Tab.Navigator>
-            <Tab.Screen name="Home" component={HomeStack} />
-            <Tab.Screen name="Caliope" component={Caliope} />
+        <Tab.Navigator
+            activeColor="#000"
+            inactiveColor="grey"
+            labeled={true}
+            barStyle={{
+                borderWidth: 0,
+                backgroundColor: '#fff',
+                paddingBottom: 12,
+
+            }}
+
+        >
+            <Tab.Screen name="Home" component={HomeStack}
+                options={{
+                    tabBarLabel: <Text style={{ fontSize: 15 }}>Home</Text>,
+                }} />
+            <Tab.Screen name="Caliope" component={Caliope}
+                options={{
+                    tabBarLabel: <Text style={{ fontSize: 15 }}>Caliope</Text>,
+                    tabBarBadge: '',
+                }}
+            />
         </Tab.Navigator>
     );
 }
