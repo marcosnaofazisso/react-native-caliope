@@ -10,7 +10,7 @@ import { inventario, carrinho } from "../data/data";
 export default function Carrinho({ navigation, route }) {
 
     const [listaInventario] = useState(inventario);
-    const [listaCarrinho, setData2] = useState(carrinho);
+    const [listaCarrinho, setListaCarrinho] = useState(carrinho);
     const [renderizarCarrinho, setRenderizarCarrinho] = useState(false)
 
     const renderRoupa = (itemData) => {
@@ -59,7 +59,7 @@ export default function Carrinho({ navigation, route }) {
 
         });
         const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
-        setData2({ listaCarrinho: filterData2 }); //seta o carrinho
+        setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
     }
 
     return (
@@ -69,11 +69,15 @@ export default function Carrinho({ navigation, route }) {
                 <Text style={styles.buttonTxt}>Limpar Carrinho</Text>
             </TouchableOpacity>
                 : null}
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home4', { pedido: listaCarrinho })}>
+                <Text style={styles.buttonTxt}>Finalizar Pedido</Text>
+            </TouchableOpacity>
             <FlatList
                 data={listaCarrinho}
                 keyExtractor={(item) => item.id}
                 renderItem={renderRoupa}
             />
+
             <BotaoChat navigation={() => navigation.navigate("Caliope")} />
         </View>
     );

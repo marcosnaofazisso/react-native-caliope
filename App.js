@@ -20,6 +20,7 @@ import Caliope from "./Caliope";
 
 import RoupaInfos from "./screens/RoupaInfos";
 import Carrinho from "./screens/Carrinho";
+import Pagamento from "./screens/Pagamento";
 import RoupaInfo from "./components/RoupaInfo";
 
 // ===============================================================================================================
@@ -39,7 +40,7 @@ function HomeStack(navigation) {
             <Stack.Screen name="Home" component={Home} options={({ navigation }) => drawerOptionsLoja(navigation)} />
             <Stack.Screen name="Home2" component={RoupaInfos} options={{ title: 'Tela Home 2', headerTitle: "Loja de Roupa" }} />
             <Stack.Screen name="Home3" component={Carrinho} options={{ title: 'Tela Home 3', headerTitle: "Loja de Roupa" }} />
-            <Stack.Screen name="Home4" component={Home4} options={{ title: 'Tela Home 4', headerTitle: "Loja de Roupa" }} />
+            <Stack.Screen name="Home4" component={Pagamento} options={{ title: 'Tela Home 4', headerTitle: "Loja de Roupa" }} />
         </Stack.Navigator>
     )
 }
