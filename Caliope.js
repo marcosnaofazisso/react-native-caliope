@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StatusBar, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image } from 'react-native';
+import { Pressable, StatusBar, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
 
 import Conversation from './Conversation';
 import MenuBar from './MenuBar';
@@ -12,10 +12,11 @@ import Tts from 'react-native-tts';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
-export default function Caliope() {
+export default function Caliope({ navigation }) {
 
     const [sessionId, setSessionId] = useState('')
     const [audioEnviado, setAudioEnviado] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [mensagem, setMensagem] = useState({})
     const [resposta, setResposta] = useState([{}])
     const [conversa, setConversa] = useState([])
@@ -26,6 +27,7 @@ export default function Caliope() {
         const destroyAudio = async () => {
             const response = await api.get('/api/session')
             setSessionId(response.data.session_id)
+            setIsLoading(false)
             console.log("GET Status Code: ", response.status);
             console.log("SESSION ID: ", response.data.session_id);
         }
@@ -60,9 +62,12 @@ export default function Caliope() {
     }
 
     const ouvirResposta = () => {
-        Tts.setDefaultLanguage('pt-BR');
-        const texto = resposta[resposta.length - 1].mensagem;
-        Tts.speak(texto);
+        if (resposta.length <= 1) alert("Carregando áudio. Aguarde...")
+        else {
+            Tts.setDefaultLanguage('pt-BR');
+            const texto = resposta[resposta.length - 1].mensagem;
+            Tts.speak(texto);
+        }
     };
 
     const onSpeechRecognized = (e) => {
@@ -85,7 +90,8 @@ export default function Caliope() {
     }
 
     useEffect(() => {
-        console.log("AUDIO ENVIADO! ", audioEnviado)
+        console.log("Carregando....")
+        // console.log("AUDIO ENVIADO! ", audioEnviado)
         mandarMensagem()
     }, [audioEnviado])
 
@@ -114,8 +120,16 @@ export default function Caliope() {
         <>
             <View style={styles.container}>
                 <StatusBar style="light" backgroundColor="black" />
-                <MenuBar />
-                <Conversation tipo={false}>{boasVindas}</Conversation>
+                <View style={styles.menuContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                        <Image style={styles.menuBar} source={require('./assets/menu.jpg')} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                        <Image style={styles.avatar} source={require('./assets/avatar-menu.png')} />
+                    </TouchableOpacity>
+                </View>
+                <ActivityIndicator color="tomato" size='large' animating={isLoading} />
+                {!isLoading && <Conversation tipo={false}>{boasVindas}</Conversation>}
                 <FlatList
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
@@ -253,5 +267,25 @@ const styles = StyleSheet.create({
     clearChat: {
         fontWeight: 'bold',
         marginBottom: 15,
+    },
+    menuBar: {
+        width: 38,
+        height: 38,
+        tintColor: 'black',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    avatar: {
+        marginLeft: 20,
+        marginTop: 8,
+        width: 28,
+        height: 28,
+        tintColor: 'black',
+    },
+    menuContainer: {
+        // paddingHorizontal: 16,
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "white",
     },
 });
