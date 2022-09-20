@@ -16,10 +16,17 @@ export const drawerOptionsLoja = (navigation) => {
                 </TouchableOpacity>
             );
         },
+        headerLeft: () => {
+            return (
+                <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                    <Image style={{ height: 40, width: 40, marginLeft: 10 }} source={require('../assets/menu.jpg')} />
+                </TouchableOpacity>
+            );
+        },
         headerRightContainerStyle: { marginRight: 20 },
 
         drawerIcon: ({ color, size }) => {
-            return <Text style={{ color: 'white' }}>Aqui seria um icone</Text>;
+            return <Text>Aqui seria um icone</Text>;
 
         },
         drawerLabel: "Home",
