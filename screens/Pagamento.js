@@ -37,7 +37,9 @@ export default function Pagamento({ navigation, route }) {
             <Text></Text>
             {pedidoCompleto.map((item) => {
                 return (
-                    <Text>1 x {item.title}</Text>
+                    <View key={item.id}>
+                        <Text>1 x {item.title}</Text>
+                    </View>
                 )
             })}
             <Text></Text>
