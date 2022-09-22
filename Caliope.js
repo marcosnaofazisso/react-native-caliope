@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StatusBar, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
+import { Pressable, StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
 
 import Conversation from './Conversation';
 import MenuBar from './MenuBar';
@@ -62,7 +62,7 @@ export default function Caliope({ navigation }) {
     }
 
     const ouvirResposta = () => {
-        if (resposta.length <= 1) alert("Áudio indisponivel, manda um mensagem...")
+        if (resposta.length <= 1) ToastAndroid.show("Áudio indisponível. Mande uma mensagem para começar...", ToastAndroid.SHORT);
         else {
             Tts.setDefaultLanguage('pt-BR');
             Tts.setDefaultRate(0.6);
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 6,
-        height:"auto",
+        height: "auto",
         borderBottomColor: "gray",
         borderWidth: 1,
         borderRadius: 10,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     microphoneIcon: {
         color: 'black',
         marginLeft: 10,
-        marginRight:10,
+        marginRight: 10,
         width: 35,
         height: 35,
     },

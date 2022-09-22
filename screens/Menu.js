@@ -4,26 +4,86 @@ import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, SafeAreaVie
 
 export default function Menu({ navigation, route }) {
 
+    const avatarPadrao = require('../assets/avatar-menu.png')
+    const avatarCris = require('../assets/cris.png')
+
+    const objetoImagens = { avatarPadrao, avatarCris }
+    const listaPedidos = [
+        {
+            id: '1',
+            numeroPedido: '12345678',
+            dataPedido: '22/09/2022',
+            totalItems: '2',
+            valorTotal: 'R$ 150'
+        },
+        {
+            id: '2',
+            numeroPedido: '12345679',
+            dataPedido: '10/09/2022',
+            totalItems: '5',
+            valorTotal: 'R$ 430'
+        },
+    ]
+
+    const [avatarEscolhido, setAvatarEscolhido] = useState(objetoImagens.avatarPadrao);
+
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
     const [login, setLogin] = useState(false);
     const [signin, setSignIn] = useState(false);
+    const [testing, setTesting] = useState(false);
+    const [verPedidos, setVerPedidos] = useState(false);
+
+
+    function logarContaTeste() {
+        setAvatarEscolhido(objetoImagens.avatarCris)
+        setTesting(true)
+    }
 
     return (
         <SafeAreaView>
             {!isLoggedIn &&
                 (<View style={styles.container}>
                     <Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>
-                    <Image style={{ height: 90, width: 90 }} source={require('../assets/avatar-menu.png')} />
+                    <Image style={{ height: 90, width: 90, borderRadius: 40 }} source={avatarEscolhido} />
                     <View style={styles.signOrLoginContainer}>
-                        {!login && <TouchableOpacity onPress={() => setLogin(true)}>
+                        {!login && !testing && <TouchableOpacity onPress={() => setLogin(true)}>
                             <Text>Entrar</Text>
                         </TouchableOpacity>}
-                        {!signin && <TouchableOpacity onPress={() => setSignIn(true)}>
+                        {!signin && !testing && <TouchableOpacity onPress={() => setSignIn(true)}>
                             <Text>Cadastrar</Text>
                         </TouchableOpacity>}
+                        {!signin && !testing && <TouchableOpacity onPress={() => logarContaTeste()}>
+                            <Text>Login de Teste</Text>
+                        </TouchableOpacity>}
+                        {testing &&
+                            <View>
+                                <Text>Cristine Acoccela</Text>
+                                <Text>(11) 98765-4321</Text>
+                                <Text>cris@caliope.com.br</Text>
+                                {!verPedidos && <TouchableOpacity onPress={() => setVerPedidos(true)}>
+                                    <Text></Text>
+                                    <Text>Ver Meus Pedidos</Text>
+                                </TouchableOpacity>}
+
+                                {verPedidos && <View>
+                                    <Text></Text>
+                                    <Text style={{ fontWeight: 'bold' }}>Pedidos:</Text>
+                                    {listaPedidos.map((pedido) => {
+                                        return (
+                                            <View key={pedido.id}>
+                                                <Text>Pedido No: {pedido.numeroPedido}</Text>
+                                                <Text>Data: {pedido.dataPedido}</Text>
+                                                <Text>Qtd de Items: {pedido.totalItems}</Text>
+                                                <Text></Text>
+                                            </View>
+                                        )
+                                    })}</View>}
+                            </View>
+                        }
                     </View>
                 </View>)}
             {login &&
@@ -35,7 +95,7 @@ export default function Menu({ navigation, route }) {
                     <TextInput style={styles.input}
                         secureTextEntry
                         placeholder="Senha"
-                        onChangeText={(senha) => setSenha(senha)}
+                        onChangeText={(senha) => setPassword(senha)}
                     />
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={() => setLogin(false)} style={styles.button}>

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList } from "react-native";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, Modal, Animated, Easing, SafeAreaView } from "react-native";
 
 import BotaoChat from "../components/BotaoChat";
 import RoupaInfos from "../components/RoupaInfo";
@@ -62,8 +62,49 @@ export default function Carrinho({ navigation, route }) {
         setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
     }
 
+    const [visible, setVisible] = useState(false)
+    const scale = useRef(new Animated.Value(0)).current;
+
+    function resizeBox(to) {
+        to === 1 && setVisible(true);
+        Animated.timing(scale, {
+            toValue: to,
+            useNativeDriver: true,
+            duration: 500,
+            easing: Easing.linear,
+        }).start(() => to === 0 && setVisible(false));
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            console.log("Abrindo modal...");
+            resizeBox(1)
+        }, 1500)
+
+        setTimeout(() => {
+            console.log("Fechando modal...");
+            resizeBox(0);
+        }, 5000)
+    }, [])
+
+
+
+
+
     return (
         <View style={styles.container}>
+
+
+            <Modal transparent visible={visible}>
+                <SafeAreaView style={{ flex: 1 }} onTouchStart={() => navigation.navigate('Caliope')}>
+                    <Animated.View
+                        style={[styles.popup, { transform: [{ scale }] }]}>
+                        <Text style={styles.textWhite}>Falta R$100 para você ganhar frete grátis!</Text>
+                    </Animated.View>
+                </SafeAreaView>
+            </Modal>
+
+
             <Text style={styles.info}>Produtos do Carrinho</Text>
             {listaCarrinho.length > 0 ?
                 <View style={styles.containerBtn}>
@@ -91,7 +132,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingRight: 5,
         paddingLeft: 5,
-        minWidth:'100%',
+        minWidth: '100%',
         height: '100%',
         backgroundColor: "#FAF8F8",
         // fontFamily: "Roboto",
@@ -108,7 +149,7 @@ const styles = StyleSheet.create({
         width: 110,
         height: 28,
         backgroundColor: "black",
-        padding:4,
+        padding: 4,
         zIndex: 1,
         marginLeft: 10,
         marginRight: 10,
@@ -127,4 +168,23 @@ const styles = StyleSheet.create({
         height: 40,
         backgroundColor: "red",
     },
+    textWhite: {
+        fontSize: 14,
+        lineHeight: 21,
+        letterSpacing: 1,
+        color: 'white',
+    },
+    popup: {
+        borderRadius: 8,
+        borderColor: '#333',
+        borderWidth: 1,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        position: 'absolute',
+        backgroundColor: 'black',
+        alignSelf: 'center',
+        bottom: 120,
+        // right: 20,
+
+    }
 });

@@ -133,7 +133,6 @@ export default function Home({ navigation }) {
                     <Text>Nenhum item encontrado 😔</Text>
                 )}
             </View>
-            <BotaoChat onPress={() => navigation.navigate('Caliope')} />
         </View>
     );
 }

@@ -37,8 +37,9 @@ export default function Pagamento({ navigation, route }) {
             <Text></Text>
             {pedidoCompleto.map((item) => {
                 return (
-                    <View key={item.id}>
+                    <View key={item.id} style={styles.containerItemPrice}>
                         <Text>1 x {item.title}</Text>
+                        <Text>R${item.price}</Text>
                     </View>
                 )
             })}
@@ -88,5 +89,9 @@ const styles = StyleSheet.create({
         width: 90,
         height: 40,
         backgroundColor: "red",
+    },
+    containerItemPrice: {
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 });
