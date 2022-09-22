@@ -66,7 +66,7 @@ export default function Carrinho({ navigation, route }) {
         <View style={styles.container}>
             <Text style={styles.info}>Produtos do Carrinho</Text>
             {listaCarrinho.length > 0 ?
-                <View>
+                <View style={styles.containerBtn}>
                     <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
                         <Text style={styles.buttonTxt}>Limpar Carrinho</Text>
                     </TouchableOpacity>
@@ -89,14 +89,29 @@ export default function Carrinho({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
+        paddingRight: 5,
+        paddingLeft: 5,
+        minWidth:'100%',
+        height: '100%',
         backgroundColor: "#FAF8F8",
         // fontFamily: "Roboto",
     },
+    containerBtn: {
+        flex: 1,
+        zIndex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+        marginBottom: 20,
+    },
     button: {
+        width: 110,
+        height: 28,
         backgroundColor: "black",
-        alignSelf: "flex-start",
-        padding: 4,
+        padding:4,
+        zIndex: 1,
         marginLeft: 10,
+        marginRight: 10,
         borderRadius: 5,
     },
     buttonTxt: {

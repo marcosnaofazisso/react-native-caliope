@@ -35,6 +35,8 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: "#FAF8F8",
+    paddingRight: 5,
+    paddingLeft: 5,
     // fontFamily: "Roboto",
   },
   button: {

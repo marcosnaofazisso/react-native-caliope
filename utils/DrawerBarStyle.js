@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, Image } from "react-native";
+import { Text, TouchableOpacity, Image, StyleSheet, } from "react-native";
 
 export const drawerOptionsLoja = (navigation) => {
     return {
@@ -12,7 +12,7 @@ export const drawerOptionsLoja = (navigation) => {
         headerRight: () => {
             return (
                 <TouchableOpacity onPress={() => navigation.navigate("Home3")}>
-                    <Image style={{ height: 20, width: 20 }} source={require('../assets/carrinho.png')} />
+                    <Image style={styles.carrinho} source={require('../assets/carrinho.png')} />
                 </TouchableOpacity>
             );
         },
@@ -35,3 +35,13 @@ export const drawerOptionsLoja = (navigation) => {
         // },
     };
 };
+
+
+const styles = StyleSheet.create({
+    carrinho: {
+        width:20,
+        height: 20,
+        marginLeft:'auto',
+        marginRight:10,
+    },
+})

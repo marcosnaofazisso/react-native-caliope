@@ -62,9 +62,10 @@ export default function Caliope({ navigation }) {
     }
 
     const ouvirResposta = () => {
-        if (resposta.length <= 1) alert("Carregando áudio. Aguarde...")
+        if (resposta.length <= 1) alert("Áudio indisponivel, manda um mensagem...")
         else {
             Tts.setDefaultLanguage('pt-BR');
+            Tts.setDefaultRate(0.6);
             const texto = resposta[resposta.length - 1].mensagem;
             Tts.speak(texto);
         }
@@ -176,6 +177,8 @@ export default function Caliope({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingRight: 5,
+        paddingLeft: 5,
         backgroundColor: "#fff",
     },
     conversation: {
@@ -207,6 +210,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 6,
+        height:"auto",
         borderBottomColor: "gray",
         borderWidth: 1,
         borderRadius: 10,
@@ -243,21 +247,22 @@ const styles = StyleSheet.create({
     },
     microphoneIcon: {
         color: 'black',
-        marginRight: 5,
-        width: 32,
-        height: 32,
+        marginLeft: 10,
+        marginRight:10,
+        width: 35,
+        height: 35,
     },
     sendIcon: {
         color: 'black',
         marginRight: 5,
-        width: 32,
-        height: 32,
+        width: 35,
+        height: 35,
     },
     listenIcon: {
         color: 'black',
-        marginRight: 5,
-        width: 32,
-        height: 32,
+        marginRight: 3,
+        width: 35,
+        height: 35,
     },
     clearField: {
         alignItems: "center",
@@ -278,8 +283,8 @@ const styles = StyleSheet.create({
     avatar: {
         marginLeft: 20,
         marginTop: 8,
-        width: 28,
-        height: 28,
+        width: 38,
+        height: 38,
         tintColor: 'black',
     },
     menuContainer: {
