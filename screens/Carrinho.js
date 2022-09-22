@@ -84,7 +84,7 @@ export default function Carrinho({ navigation, route }) {
         setTimeout(() => {
             console.log("Fechando modal...");
             resizeBox(0);
-        }, 5000)
+        }, 6000)
     }, [])
 
 
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 8,
         position: 'absolute',
-        backgroundColor: 'black',
+        backgroundColor: '#ff0066',
         alignSelf: 'center',
         bottom: 120,
         // right: 20,
