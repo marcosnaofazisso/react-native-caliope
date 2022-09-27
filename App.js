@@ -23,6 +23,7 @@ import RoupaInfos from "./screens/RoupaInfos";
 import Carrinho from "./screens/Carrinho";
 import Pagamento from "./screens/Pagamento";
 import Menu from "./screens/Menu";
+import Cadastro from "./screens/Cadastro";
 
 // ===============================================================================================================
 
@@ -62,6 +63,7 @@ function HomeStack(navigation) {
             <Stack.Screen name="Home3" component={Carrinho} options={{ title: 'Tela Home 3', headerTitle: "Loja de Roupa" }} />
             <Stack.Screen name="Home4" component={Pagamento} options={{ title: 'Tela Home 4', headerTitle: "Loja de Roupa" }} />
             <Stack.Screen name="Home5" component={Menu} options={{ title: 'Tela Home 5', headerTitle: "Menu" }} />
+            <Stack.Screen name="Home6" component={Cadastro} options={{ title: 'Tela Home 6', headerTitle: "Cadastro" }} />
         </Stack.Navigator>
     )
 }

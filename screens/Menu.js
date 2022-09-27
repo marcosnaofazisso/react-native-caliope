@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, FlatList, SafeAreaView, Image, TextInput } from "react-native";
 
-import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, SafeAreaView, Image, TextInput } from "react-native";
+import Pedido from "./Pedido";
+import { listaPedidos } from "../data/listaPedidos";
 
 export default function Menu({ navigation, route }) {
 
@@ -8,50 +10,12 @@ export default function Menu({ navigation, route }) {
     const avatarCris = require('../assets/cris.png')
 
     const objetoImagens = { avatarPadrao, avatarCris }
-    const listaPedidos = [
-        {
-            id: '1',
-            numeroPedido: '12345680',
-            dataPedido: '22/09/2022',
-            totalItems: '2',
-            valorTotal: 'R$ 150'
-        },
-        {
-            id: '2',
-            numeroPedido: '12345679',
-            dataPedido: '10/09/2022',
-            totalItems: '5',
-            valorTotal: 'R$ 430'
-        },
-        {
-            id: '3',
-            numeroPedido: '12345678',
-            dataPedido: '18/08/2022',
-            totalItems: '1',
-            valorTotal: 'R$ 180'
-        },
-        {
-            id: '4',
-            numeroPedido: '12345677',
-            dataPedido: '09/08/2022',
-            totalItems: '4',
-            valorTotal: 'R$ 243'
-        },
-        {
-            id: '5',
-            numeroPedido: '12345676',
-            dataPedido: '30/07/2022',
-            totalItems: '8',
-            valorTotal: 'R$ 1430,00'
-        },
-    ]
 
     const [avatarEscolhido, setAvatarEscolhido] = useState(objetoImagens.avatarPadrao);
 
-
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState('cris@caliope.com');
+    const [password, setPassword] = useState('123456789');
 
     const [login, setLogin] = useState(false);
     const [signin, setSignIn] = useState(false);
@@ -64,66 +28,83 @@ export default function Menu({ navigation, route }) {
         setTesting(true)
     }
 
+    function renderPedido(data) {
+        const item = data.item;
+        const pedidoItem = {
+            id: item.id,
+            numeroPedido: item.numeroPedido,
+            dataPedido: item.dataPedido,
+            totalItems: item.totalItems,
+            valorTotal: item.valorTotal
+        }
+
+        return (
+            <Pedido {...pedidoItem} />)
+
+    }
+
+
+
+    const PerfilCris = () => (
+        <View>
+            <Text>Cristine Acoccela</Text>
+            <Text>(11) 98765-4321</Text>
+            <Text>cris@caliope.com.br</Text>
+            {!verPedidos && <TouchableOpacity onPress={() => setVerPedidos(true)}>
+                <Text></Text>
+                <Text>Ver Meus Pedidos</Text>
+            </TouchableOpacity>}
+        </View>
+    )
+
+
+
     return (
         <SafeAreaView>
             {!isLoggedIn &&
                 (<View style={styles.container}>
-                    <Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>
+                    {!testing && <Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
                     <Image style={{ height: 90, width: 90, borderRadius: 40 }} source={avatarEscolhido} />
-                    <View style={styles.signOrLoginContainer}>
-                        {!login && !testing && <TouchableOpacity onPress={() => setLogin(true)}>
-                            <Text>Entrar</Text>
-                        </TouchableOpacity>}
-                        {!signin && !testing && <TouchableOpacity onPress={() => setSignIn(true)}>
-                            <Text>Cadastrar</Text>
-                        </TouchableOpacity>}
-                        {!signin && !testing && <TouchableOpacity onPress={() => logarContaTeste()}>
-                            <Text>Login de Teste</Text>
-                        </TouchableOpacity>}
-                        {testing &&
-                            <View>
-                                <Text>Cristine Acoccela</Text>
-                                <Text>(11) 98765-4321</Text>
-                                <Text>cris@caliope.com.br</Text>
-                                {!verPedidos && <TouchableOpacity onPress={() => setVerPedidos(true)}>
-                                    <Text></Text>
-                                    <Text>Ver Meus Pedidos</Text>
-                                </TouchableOpacity>}
 
-                                {verPedidos && <View>
-                                    <Text></Text>
-                                    <Text style={{ fontWeight: 'bold' }}>Pedidos:</Text>
-                                    {listaPedidos.map((pedido) => {
-                                        return (
-                                            <View key={pedido.id}>
-                                                <Text>Pedido No: {pedido.numeroPedido}</Text>
-                                                <Text>Data: {pedido.dataPedido}</Text>
-                                                <Text>Qtd de Items: {pedido.totalItems}</Text>
-                                                <Text>Total: {pedido.valorTotal}</Text>
-                                                <Text></Text>
-                                            </View>
-                                        )
-                                    })}</View>}
-                            </View>
-                        }
-                    </View>
+                    {testing && <PerfilCris />}
+
+                    {verPedidos && <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>}
+
                 </View>)}
-            {login &&
+            {verPedidos && testing && <View style={styles.pedidosContainer}>
+                {!listaPedidos.empty ? (
+                    <FlatList
+                        data={listaPedidos}
+                        keyExtractor={(item) => item.id}
+                        renderItem={renderPedido}
+                    />
+                ) : (
+                    <Text>Nenhum item encontrado 😔</Text>
+                )}
+            </View>}
+            {!testing && <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>}
+            {!testing &&
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.input}
                         placeholder="Email"
+                        value={email}
                         onChangeText={(email) => setEmail(email)}
                     />
                     <TextInput style={styles.input}
                         secureTextEntry
                         placeholder="Senha"
+                        value={password}
                         onChangeText={(senha) => setPassword(senha)}
                     />
+                    {!signin && !testing && <TouchableOpacity onPress={() => navigation.navigate("Home6")} style={{ alignSelf: 'center', marginTop: 15 }}>
+                        <Text>Se Cadastrar</Text>
+                    </TouchableOpacity>}
+
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={() => setLogin(false)} style={styles.button}>
                             <Text style={styles.buttonTxt}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={() => logarContaTeste()}>
                             <Text style={styles.buttonTxt}>Entrar</Text>
                         </TouchableOpacity>
                     </View>
@@ -169,6 +150,12 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingHorizontal: 20,
     },
+    pedidosContainer: {
+        flexGrow: 1,
+        backgroundColor: "#FAF8F8",
+        fontFamily: "Roboto",
+        paddingHorizontal: 10,
+    },
     input: {
         borderBottomWidth: 1,
         borderBottomColor: "#000",
@@ -210,5 +197,9 @@ const styles = StyleSheet.create({
         width: 90,
         height: 40,
         backgroundColor: "red",
+    },
+    imageContainer: {
+        flex: 10,
+        marginTop: 10,
     },
 });
