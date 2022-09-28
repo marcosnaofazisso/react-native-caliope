@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, FlatList, SafeAreaView, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView, FlatList, SafeAreaView, Image, TextInput } from "react-native";
 
 import Pedido from "./Pedido";
+
 import { listaPedidos } from "../data/listaPedidos";
+import { apiUsuario } from "../api";
 
 export default function Menu({ navigation, route }) {
 
     const avatarPadrao = require('../assets/avatar-menu.png')
-    const avatarCris = require('../assets/cris.png')
+    const avatarCris = require('../assets/cristine@caliope.com.br.png')
+    const avatarPri = require('../assets/priscila@caliope.com.br.jpg')
+    const avatarMaciel = require('../assets/marcosmaciel@caliope.com.br.jpg')
+    const avatarJojo = require('../assets/jonathan@caliope.com.br.jpg')
 
     const objetoImagens = { avatarPadrao, avatarCris }
 
     const [avatarEscolhido, setAvatarEscolhido] = useState(objetoImagens.avatarPadrao);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [email, setEmail] = useState('cris@caliope.com');
+    const [email, setEmail] = useState('cristine@caliope.com.br');
     const [password, setPassword] = useState('123456789');
 
     const [login, setLogin] = useState(false);
@@ -22,10 +27,26 @@ export default function Menu({ navigation, route }) {
     const [testing, setTesting] = useState(false);
     const [verPedidos, setVerPedidos] = useState(false);
 
+    const [usuario, setUsuario] = useState();
+    const [listaDeUsuarios, setListaDeUsuarios] = useState([]);
+
+
+    const usuariosTeste = {
+        'cristine@caliope.com.br': avatarCris,
+        'priscila@caliope.com.br': avatarPri,
+        'marcosmaciel@caliope.com.br': avatarMaciel,
+        'jonathan@caliope.com.br': avatarJojo
+    }
 
     function logarContaTeste() {
-        setAvatarEscolhido(objetoImagens.avatarCris)
-        setTesting(true)
+        listaDeUsuarios.forEach(usuarioCadastrado => {
+            if (usuarioCadastrado.email == email) {
+                console.log('Logando usuario...')
+                setUsuario(usuarioCadastrado)
+                setTesting(true)
+            }
+
+        });
     }
 
     function renderPedido(data) {
@@ -43,17 +64,39 @@ export default function Menu({ navigation, route }) {
 
     }
 
+    useEffect(() => {
+        const getAllUsuarios = async () => {
+            const response = await apiUsuario.get('/usuario')
+            setListaDeUsuarios(response.data)
+            console.log("GET USUARIOS Status Code: ", response.status);
+            console.log("Response Data: ", JSON.stringify(response.data));
+        }
+        getAllUsuarios()
+    }, [])
+
+    async function deletarConta(id) {
+        const response = await apiUsuario.delete(`/usuario/${id}`)
+        console.log("DELETE Status Code: ", response.status);
+        ToastAndroid.show("Conta deletada com sucesso. Sentiremos saudades", ToastAndroid.SHORT)
+        navigation.goBack()
+    }
 
 
-    const PerfilCris = () => (
+
+    const PerfilUsuario = () => (
         <View>
-            <Text>Cristine Acoccela</Text>
-            <Text>(11) 98765-4321</Text>
-            <Text>cris@caliope.com.br</Text>
-            {!verPedidos && <TouchableOpacity onPress={() => setVerPedidos(true)}>
-                <Text></Text>
-                <Text>Ver Meus Pedidos</Text>
-            </TouchableOpacity>}
+            <Text>{usuario.nome}</Text>
+            <Text>{usuario.numeroCelular}</Text>
+            <Text>{usuario.email}</Text>
+            <Text></Text>
+            {!verPedidos &&
+                <TouchableOpacity onPress={() => setVerPedidos(true)}>
+                    <Text>Ver Meus Pedidos</Text>
+                </TouchableOpacity>}
+            <Text></Text>
+            <TouchableOpacity onPress={() => deletarConta(usuario.id)}>
+                <Text>Deletar Conta</Text>
+            </TouchableOpacity>
         </View>
     )
 
@@ -64,9 +107,9 @@ export default function Menu({ navigation, route }) {
             {!isLoggedIn &&
                 (<View style={styles.container}>
                     {!testing && <Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
-                    <Image style={{ height: 90, width: 90, borderRadius: 40 }} source={avatarEscolhido} />
+                    <Image style={{ height: 90, width: 90, borderRadius: 40 }} source={usuariosTeste[email] ? usuariosTeste[email] : avatarPadrao} />
 
-                    {testing && <PerfilCris />}
+                    {testing && <PerfilUsuario />}
 
                     {verPedidos && <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>}
 
