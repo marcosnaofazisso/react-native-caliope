@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView, FlatList, SafeAreaView, Image, Alert, TextInput } from "react-native";
 
 import Pedido from "./Pedido";
 
 import { listaPedidos } from "../data/listaPedidos";
+import { fotosDosUsuariosTeste } from "../data/fotosUsuarios";
 import { apiUsuario } from "../api";
+
+
+import { UsuarioContext } from "../context/usuario-context";
+
 
 export default function Menu({ navigation, route }) {
 
-    const avatarPadrao = require('../assets/avatar-menu.png')
-    const avatarCris = require('../assets/cristine@caliope.com.br.png')
-    const avatarPri = require('../assets/priscila@caliope.com.br.jpeg')
-    const avatarMaciel = require('../assets/marcosmaciel@caliope.com.br.jpg')
-    const avatarJojo = require('../assets/jonathan@caliope.com.br.jpg')
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user, isLoggedIn, signIn, signOut } = useContext(UsuarioContext)
+
+
     const [recoverPassword, setRecoverPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [confirmedNewPassword, setConfirmedNewPassword] = useState('');
@@ -22,29 +24,20 @@ export default function Menu({ navigation, route }) {
     const [email, setEmail] = useState("cristine@caliope.com.br");
     const [password, setPassword] = useState("123456789");
 
-    const [login, setLogin] = useState(false);
     const [signin, setSignIn] = useState(false);
-    const [testing, setTesting] = useState(false);
     const [verPedidos, setVerPedidos] = useState(false);
 
-    const [usuario, setUsuario] = useState();
     const [listaDeUsuarios, setListaDeUsuarios] = useState([]);
 
 
-    const usuariosTeste = {
-        'cristine@caliope.com.br': avatarCris,
-        'priscila@caliope.com.br': avatarPri,
-        'marcosmaciel@caliope.com.br': avatarMaciel,
-        'jonathan@caliope.com.br': avatarJojo
-    }
+
 
     function logarContaTeste() {
         let existeCadastro = false
         for (let i = 0; i < listaDeUsuarios.length; i++) {
             if (listaDeUsuarios[i].email === email && listaDeUsuarios[i].senha === password) {
                 console.log('Logando usuario...')
-                setUsuario(listaDeUsuarios[i])
-                setTesting(true)
+                signIn(listaDeUsuarios[i])
                 existeCadastro = true
                 break
             }
@@ -54,6 +47,11 @@ export default function Menu({ navigation, route }) {
         }
 
     }
+    function deslogarContaTeste() {
+        signOut()
+
+    }
+
 
     function renderPedido(data) {
         const item = data.item;
@@ -111,17 +109,20 @@ export default function Menu({ navigation, route }) {
 
     const PerfilUsuario = () => (
         <View>
-            <Text>{usuario.nome}</Text>
-            <Text>{usuario.numeroCelular}</Text>
-            <Text>{usuario.email}</Text>
+            <Text>{user.nome}</Text>
+            <Text>{user.numeroCelular}</Text>
+            <Text>{user.email}</Text>
             <Text></Text>
             {!verPedidos &&
                 <TouchableOpacity onPress={() => setVerPedidos(true)}>
                     <Text >Ver Meus Pedidos</Text>
                 </TouchableOpacity>}
             <Text></Text>
-            <TouchableOpacity onPress={() => deletarConta(usuario.id)} style={styles.buttonDeletarConta}>
+            <TouchableOpacity onPress={() => deletarConta(user.id)} style={styles.buttonDeletarConta}>
                 <Text style={styles.buttonTxt}>Deletar Conta</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => deslogarContaTeste()}>
+                <Text>Sair</Text>
             </TouchableOpacity>
             <Text></Text>
             {!recoverPassword && <TouchableOpacity onPress={() => setRecoverPassword(true)}>
@@ -145,7 +146,7 @@ export default function Menu({ navigation, route }) {
                         <TouchableOpacity onPress={() => setRecoverPassword(false)} style={styles.button}>
                             <Text style={styles.buttonTxt}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => alterarSenha(usuario, newPassword, confirmedNewPassword)} style={styles.button}>
+                        <TouchableOpacity onPress={() => alterarSenha(user, newPassword, confirmedNewPassword)} style={styles.button}>
                             <Text style={styles.buttonTxt}>Alterar Senha</Text>
                         </TouchableOpacity>
                     </View>
@@ -160,10 +161,8 @@ export default function Menu({ navigation, route }) {
         <SafeAreaView>
             {!isLoggedIn &&
                 (<View style={styles.container}>
-                    {!testing && <Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
-                    <Image style={styles.imagemAvatar} source={usuariosTeste[email] ? usuariosTeste[email] : avatarPadrao} />
-
-                    {testing && <PerfilUsuario />}
+                    {<Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
+                    <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[email] ? fotosDosUsuariosTeste[email] : fotosDosUsuariosTeste['avatarPadrao']} />
 
                     {verPedidos &&
                         <View>
@@ -174,7 +173,22 @@ export default function Menu({ navigation, route }) {
                         </View>}
 
                 </View>)}
-            {verPedidos && testing && <View style={styles.pedidosContainer}>
+            {isLoggedIn &&
+                (<View style={styles.container}>
+                    <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
+
+                    <PerfilUsuario />
+
+                    {verPedidos &&
+                        <View>
+                            <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>
+                            <TouchableOpacity onPress={() => setVerPedidos(false)}>
+                                <Text>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>}
+
+                </View>)}
+            {verPedidos && <View style={styles.pedidosContainer}>
                 {!listaPedidos.empty ? (
                     <FlatList
                         data={listaPedidos}
@@ -185,8 +199,8 @@ export default function Menu({ navigation, route }) {
                     <Text>Nenhum item encontrado 😔</Text>
                 )}
             </View>}
-            {!testing && <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>}
-            {!testing &&
+            {!isLoggedIn && <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>}
+            {!isLoggedIn &&
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.input}
                         placeholder="Email"
@@ -199,12 +213,12 @@ export default function Menu({ navigation, route }) {
                         value={password}
                         onChangeText={(senha) => setPassword(senha)}
                     />
-                    {!signin && !testing && <TouchableOpacity onPress={() => navigation.navigate("Home6")} style={{ alignSelf: 'center', marginTop: 15 }}>
+                    {!signin && <TouchableOpacity onPress={() => navigation.navigate("Home6")} style={{ alignSelf: 'center', marginTop: 15 }}>
                         <Text>Criar um Cadastro</Text>
                     </TouchableOpacity>}
 
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => setLogin(false)} style={styles.button}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
                             <Text style={styles.buttonTxt}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={() => logarContaTeste()}>

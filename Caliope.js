@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Pressable, StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
 
 import Conversation from './Conversation';
-import MenuBar from './MenuBar';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
@@ -12,7 +11,17 @@ import Tts from 'react-native-tts';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
+
+import { UsuarioContext } from './context/usuario-context';
+
+import { fotosDosUsuariosTeste } from './data/fotosUsuarios';
+
+
 export default function Caliope({ navigation }) {
+
+
+    const { user } = useContext(UsuarioContext)
+
 
     const [sessionId, setSessionId] = useState('')
     const [audioEnviado, setAudioEnviado] = useState(false)
@@ -126,11 +135,12 @@ export default function Caliope({ navigation }) {
                         <Image style={styles.menuBar} source={require('./assets/menu.jpg')} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
-                        <Image style={styles.avatar} source={require('./assets/avatar-menu.png')} />
+                        <Image style={styles.avatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
                     </TouchableOpacity>
                 </View>
                 <ActivityIndicator color="tomato" size='large' animating={isLoading} />
                 {!isLoading && <Conversation tipo={false}>{boasVindas}</Conversation>}
+                {!isLoading && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}`}</Conversation>}
                 <FlatList
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
@@ -283,9 +293,10 @@ const styles = StyleSheet.create({
     avatar: {
         marginLeft: 20,
         marginTop: 8,
-        width: 38,
-        height: 38,
-        tintColor: 'black',
+        width: 50,
+        height: 50,
+        borderRadius: 40
+
     },
     menuContainer: {
         // paddingHorizontal: 16,

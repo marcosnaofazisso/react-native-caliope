@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component, PropTypes } from "react";
+import React, { useState, useEffect, Component, PropTypes, useContext } from "react";
 import {
     AppState,
     StyleSheet,
@@ -14,9 +14,14 @@ import {
 import RoupaBox from '../components/RoupaBox.js'
 import { inventario } from "../data/data.js";
 
-import BotaoChat from "../components/BotaoChat.js";
+import { UsuarioContext } from "../context/usuario-context.js";
 
 export default function Home({ navigation }) {
+
+    const { nome } = useContext(UsuarioContext);
+
+
+
     const [state, setState] = useState({
         tops: false,
         bottoms: false,
