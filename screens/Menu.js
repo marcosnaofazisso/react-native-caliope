@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView, FlatList, SafeAreaView, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView, FlatList, SafeAreaView, Image, Alert, TextInput } from "react-native";
 
 import Pedido from "./Pedido";
 
@@ -10,7 +10,7 @@ export default function Menu({ navigation, route }) {
 
     const avatarPadrao = require('../assets/avatar-menu.png')
     const avatarCris = require('../assets/cristine@caliope.com.br.png')
-    const avatarPri = require('../assets/priscila@caliope.com.br.jpg')
+    const avatarPri = require('../assets/priscila@caliope.com.br.jpeg')
     const avatarMaciel = require('../assets/marcosmaciel@caliope.com.br.jpg')
     const avatarJojo = require('../assets/jonathan@caliope.com.br.jpg')
 
@@ -19,8 +19,8 @@ export default function Menu({ navigation, route }) {
     const [avatarEscolhido, setAvatarEscolhido] = useState(objetoImagens.avatarPadrao);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [email, setEmail] = useState('cristine@caliope.com.br');
-    const [password, setPassword] = useState('123456789');
+    const [email, setEmail] = useState("cristine@caliope.com.br");
+    const [password, setPassword] = useState("1213456789");
 
     const [login, setLogin] = useState(false);
     const [signin, setSignIn] = useState(false);
@@ -39,14 +39,20 @@ export default function Menu({ navigation, route }) {
     }
 
     function logarContaTeste() {
-        listaDeUsuarios.forEach(usuarioCadastrado => {
-            if (usuarioCadastrado.email == email) {
+        let existeCadastro = false
+        for (let i = 0; i < listaDeUsuarios.length; i++) {
+            if (listaDeUsuarios[i].email === email && listaDeUsuarios[i].senha === password) {
                 console.log('Logando usuario...')
-                setUsuario(usuarioCadastrado)
+                setUsuario(listaDeUsuarios[i])
                 setTesting(true)
+                existeCadastro = true
+                break
             }
+        }
+        if (!existeCadastro) {
+            Alert.alert("Dados inválidos.", "Por favor, verifique os dados inseridos e tente novamente.")
+        }
 
-        });
     }
 
     function renderPedido(data) {
