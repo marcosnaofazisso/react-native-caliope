@@ -103,7 +103,7 @@ export default function Carrinho({ navigation }) {
                     <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
                         <Text style={styles.buttonTxt}>Limpar Carrinho</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home4', { pedido: listaCarrinho })}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Pagamento', { pedido: listaCarrinho })}>
                         <Text style={styles.buttonTxt}>Finalizar Pedido</Text>
                     </TouchableOpacity>
                 </View>

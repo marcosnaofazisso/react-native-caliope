@@ -18,7 +18,7 @@ export default function Pagamento({ navigation, route }) {
 
     function finalizarPedido() {
         limparItemsDoCarrinho()
-        navigation.navigate('Home')
+        navigation.navigate("HomeScreen")
     }
 
     return (

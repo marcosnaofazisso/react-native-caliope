@@ -48,7 +48,7 @@ export default function Home3({ navigation }) {
             <Text> </Text>
             <Button
                 title="Finalizar compra"
-                onPress={() => navigation.navigate('Home4')} />
+                onPress={() => navigation.navigate('Pagamento')} />
         </View>
     )
 }
