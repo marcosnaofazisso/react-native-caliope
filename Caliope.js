@@ -101,7 +101,6 @@ export default function Caliope({ navigation }) {
 
     useEffect(() => {
         console.log("Carregando....")
-        // console.log("AUDIO ENVIADO! ", audioEnviado)
         mandarMensagem()
     }, [audioEnviado])
 
@@ -131,10 +130,10 @@ export default function Caliope({ navigation }) {
             <View style={styles.container}>
                 <StatusBar style="light" backgroundColor="black" />
                 <View style={styles.menuContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
                         <Image style={styles.menuBar} source={require('./assets/menu.jpg')} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
                         <Image style={styles.avatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
                     </TouchableOpacity>
                 </View>

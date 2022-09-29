@@ -30,8 +30,6 @@ export default function Menu({ navigation, route }) {
     const [listaDeUsuarios, setListaDeUsuarios] = useState([]);
 
 
-
-
     function logarContaTeste() {
         let existeCadastro = false
         for (let i = 0; i < listaDeUsuarios.length; i++) {
@@ -213,7 +211,7 @@ export default function Menu({ navigation, route }) {
                         value={password}
                         onChangeText={(senha) => setPassword(senha)}
                     />
-                    {!signin && <TouchableOpacity onPress={() => navigation.navigate("Home6")} style={{ alignSelf: 'center', marginTop: 15 }}>
+                    {!signin && <TouchableOpacity onPress={() => navigation.navigate("Cadastro")} style={{ alignSelf: 'center', marginTop: 15 }}>
                         <Text>Criar um Cadastro</Text>
                     </TouchableOpacity>}
 

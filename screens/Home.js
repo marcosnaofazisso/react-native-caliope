@@ -13,7 +13,6 @@ import {
 
 import RoupaBox from '../components/RoupaBox.js'
 
-import { UsuarioContext } from "../context/usuario-context.js";
 import { CarrinhoContext } from "../context/carrinho-context.js";
 
 export default function Home({ navigation }) {
@@ -73,7 +72,7 @@ export default function Home({ navigation }) {
         };
 
         function pressHandler() {
-            navigation.navigate("Home2", { ...roupaItemProps });
+            navigation.navigate("RoupaInfos", { ...roupaItemProps });
         }
 
         if (roupaItemProps.type === "tops" && state.tops) {

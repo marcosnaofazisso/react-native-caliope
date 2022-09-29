@@ -11,14 +11,14 @@ export const drawerOptionsLoja = (navigation) => {
 
         headerRight: () => {
             return (
-                <TouchableOpacity onPress={() => navigation.navigate("Home3")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Carrinho")}>
                     <Image style={styles.carrinho} source={require('../assets/carrinho.png')} />
                 </TouchableOpacity>
             );
         },
         headerLeft: () => {
             return (
-                <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
                     <Image style={{ height: 40, width: 40, marginLeft: 10 }} source={require('../assets/menu.jpg')} />
                 </TouchableOpacity>
             );
@@ -39,9 +39,9 @@ export const drawerOptionsLoja = (navigation) => {
 
 const styles = StyleSheet.create({
     carrinho: {
-        width:20,
+        width: 20,
         height: 20,
-        marginLeft:'auto',
-        marginRight:10,
+        marginLeft: 'auto',
+        marginRight: 10,
     },
 })

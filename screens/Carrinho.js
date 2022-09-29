@@ -4,15 +4,12 @@ import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, Modal, Anim
 import BotaoChat from "../components/BotaoChat";
 import RoupaInfos from "../components/RoupaInfo";
 
-// import { inventario, carrinho } from "../data/data";
-
 import { CarrinhoContext } from "../context/carrinho-context";
 
-export default function Carrinho({ navigation, route }) {
+export default function Carrinho({ navigation }) {
 
 
-    const { listaInventario, listaCarrinho, excluirItemAoCarrinho, limparItemsDoCarrinho } = useContext(CarrinhoContext);
-
+    const { listaCarrinho, excluirItemAoCarrinho, limparItemsDoCarrinho } = useContext(CarrinhoContext);
     const [renderizarCarrinho, setRenderizarCarrinho] = useState(false)
 
     const renderRoupa = (itemData) => {
@@ -29,8 +26,7 @@ export default function Carrinho({ navigation, route }) {
 
         function onPress() {
             excluirItemAoCarrinho(roupaItemProps.id)
-            // setRenderizarCarrinho(current => !current) //controla a renderização da tela
-
+            setRenderizarCarrinho(current => !current)
         }
 
         return (

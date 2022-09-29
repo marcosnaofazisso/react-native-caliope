@@ -16,10 +16,6 @@ const Tab = createMaterialBottomTabNavigator();
 
 
 import Home from './screens/Home'
-import Home2 from "./screens/Home2";
-import Home3 from "./screens/Home3";
-import Home4 from "./screens/Home4";
-
 import Caliope from "./Caliope";
 
 import RoupaInfos from "./screens/RoupaInfos";
@@ -45,7 +41,7 @@ function Tabs() {
             }}
 
         >
-            <Tab.Screen name="Home" component={HomeStack}
+            <Tab.Screen name="HomeTab" component={HomeStack}
                 options={{
                     tabBarLabel: <Text style={{ fontSize: 15 }}>Home</Text>,
                 }} />
@@ -60,13 +56,13 @@ function Tabs() {
 }
 function HomeStack(navigation) {
     return (
-        <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={Home} options={({ navigation }) => drawerOptionsLoja(navigation)} />
-            <Stack.Screen name="Home2" component={RoupaInfos} options={{ title: 'Tela Home 2', headerTitle: "Loja de Roupa" }} />
-            <Stack.Screen name="Home3" component={Carrinho} options={{ title: 'Tela Home 3', headerTitle: "Loja de Roupa" }} />
-            <Stack.Screen name="Home4" component={Pagamento} options={{ title: 'Tela Home 4', headerTitle: "Loja de Roupa" }} />
-            <Stack.Screen name="Home5" component={Menu} options={{ title: 'Tela Home 5', headerTitle: "Menu" }} />
-            <Stack.Screen name="Home6" component={Cadastro} options={{ title: 'Tela Home 6', headerTitle: "Cadastro" }} />
+        <Stack.Navigator initialRouteName="HomeScreen">
+            <Stack.Screen name="HomeScreen" component={Home} options={({ navigation }) => drawerOptionsLoja(navigation)} />
+            <Stack.Screen name="RoupaInfos" component={RoupaInfos} options={{ headerTitle: "Loja de Roupa" }} />
+            <Stack.Screen name="Carrinho" component={Carrinho} options={{ headerTitle: "Loja de Roupa" }} />
+            <Stack.Screen name="Pagamento" component={Pagamento} options={{ headerTitle: "Loja de Roupa" }} />
+            <Stack.Screen name="Menu" component={Menu} options={{ headerTitle: "Menu" }} />
+            <Stack.Screen name="Cadastro" component={Cadastro} options={{ headerTitle: "Cadastro" }} />
         </Stack.Navigator>
     )
 }

@@ -1,10 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-// import { inventario, carrinho } from "../data/data";
-
 import { CarrinhoContext } from "../context/carrinho-context";
-
 
 export default function RoupaInfo(props) {
 

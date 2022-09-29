@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList } from "react-native";
 
-
-// import { inventario, carrinho } from "../data/data";
-
 import { UsuarioContext } from "../context/usuario-context";
 import { CarrinhoContext } from "../context/carrinho-context";
 
@@ -11,10 +8,7 @@ import { CarrinhoContext } from "../context/carrinho-context";
 export default function Pagamento({ navigation, route }) {
 
     const { user } = useContext(UsuarioContext)
-    const { listaInventario, listaCarrinho, excluirItemAoCarrinho, limparItemsDoCarrinho } = useContext(CarrinhoContext);
-
-    // const [listaInventario] = useState(inventario);
-    // const [listaCarrinho, setListaCarrinho] = useState(carrinho);
+    const { limparItemsDoCarrinho } = useContext(CarrinhoContext);
 
     const pedidoCompleto = route.params.pedido;
 
@@ -55,7 +49,7 @@ export default function Pagamento({ navigation, route }) {
             {(Object.keys(user).length == 0) &&
                 <View>
                     <Text>Cadastre-se ou faça um login para finalizar sua compra.</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Home5")}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Menu")}>
                         <Text style={styles.buttonTxt}>Fazer Login / Cadastro</Text>
                     </TouchableOpacity>
                 </View>}

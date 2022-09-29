@@ -1,10 +1,8 @@
 import React, { createContext, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 
 import { inventario, carrinho } from "../data/data";
 
 export const CarrinhoContext = createContext({})
-
 
 export default function CarrinhoContextProvider({ children }) {
 
@@ -29,10 +27,8 @@ export default function CarrinhoContextProvider({ children }) {
                 return x.id;
             })
             .indexOf(id);
-        console.log("Lista Carrinho ANTES=====>>>>>", listaCarrinho)
         listaInventario.splice(id - 1, 0, listaCarrinho[index]);
         listaCarrinho.splice(index, 1); //o splice limpa o item da lista (carrinho), então é essencial pro funcionamento
-        console.log("Lista Carrinho DEPOIS=====>>>>>", listaCarrinho)
 
     }
 
@@ -45,8 +41,6 @@ export default function CarrinhoContextProvider({ children }) {
                 .indexOf(itemDoCarrinho.id);
             listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
         });
-        const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
-        // setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
         setListaCarrinho([]); //seta o carrinho
 
     }

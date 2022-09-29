@@ -15,8 +15,7 @@ export default function Cadastro({ navigation, route }) {
     useEffect(() => {
         const getAllUsuarios = async () => {
             const response = await apiUsuario.get('/usuario')
-            console.log("GET USUARIOS Status Code: ", response.status);
-            // console.log("Response Data: ", JSON.stringify(response.data));
+            console.log("GET Status Code: ", response.status);
         }
         getAllUsuarios()
     }, [])
@@ -65,7 +64,7 @@ export default function Cadastro({ navigation, route }) {
                     onChangeText={(senha) => setSenha(senha)}
                 />
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
                         <Text style={styles.buttonTxt}>Cancelar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={criarNovoUsuario} >
