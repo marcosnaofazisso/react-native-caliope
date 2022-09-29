@@ -19,7 +19,7 @@ export const drawerOptionsLoja = (navigation) => {
         headerLeft: () => {
             return (
                 <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
-                    <Image style={{ height: 40, width: 40, marginLeft: 10 }} source={require('../assets/menu.jpg')} />
+                    <Image style={styles.menuIcon} source={require('../assets/menu.jpg')} />
                 </TouchableOpacity>
             );
         },
@@ -44,4 +44,9 @@ const styles = StyleSheet.create({
         marginLeft:'auto',
         marginRight:10,
     },
+    menuIcon: {
+        height: 40,
+        width: 40, 
+        marginLeft: 10,
+    }
 })
