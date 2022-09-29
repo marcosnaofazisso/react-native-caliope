@@ -4,13 +4,15 @@ import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, Modal, Anim
 import BotaoChat from "../components/BotaoChat";
 import RoupaInfos from "../components/RoupaInfo";
 
-import { inventario, carrinho } from "../data/data";
+// import { inventario, carrinho } from "../data/data";
 
+import { CarrinhoContext } from "../context/carrinho-context";
 
 export default function Carrinho({ navigation, route }) {
 
-    const [listaInventario] = useState(inventario);
-    const [listaCarrinho, setListaCarrinho] = useState(carrinho);
+
+    const { listaInventario, listaCarrinho, excluirItemAoCarrinho, limparItemsDoCarrinho } = useContext(CarrinhoContext);
+
     const [renderizarCarrinho, setRenderizarCarrinho] = useState(false)
 
     const renderRoupa = (itemData) => {
@@ -26,15 +28,8 @@ export default function Carrinho({ navigation, route }) {
         };
 
         function onPress() {
-            var index = listaCarrinho
-                .map((x) => {
-                    return x.id;
-                })
-                .indexOf(roupaItemProps.id);
-
-            listaInventario.splice(roupaItemProps.id - 1, 0, listaCarrinho[index]);
-            listaCarrinho.splice(index, 1); //o splice limpa o item da lista (carrinho), então é essencial pro funcionamento
-            setRenderizarCarrinho(current => !current) //controla a renderização da tela
+            excluirItemAoCarrinho(roupaItemProps.id)
+            // setRenderizarCarrinho(current => !current) //controla a renderização da tela
 
         }
 
@@ -49,17 +44,18 @@ export default function Carrinho({ navigation, route }) {
     };
 
     function limparCarrinho() {
-        listaCarrinho.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
-            var index = listaCarrinho
-                .map((x) => {
-                    return x.id;
-                })
-                .indexOf(itemDoCarrinho.id);
-            listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
+        limparItemsDoCarrinho()
+        // listaCarrinho.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
+        //     var index = listaCarrinho
+        //         .map((x) => {
+        //             return x.id;
+        //         })
+        //         .indexOf(itemDoCarrinho.id);
+        //     listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
 
-        });
-        const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
-        setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
+        // });
+        // const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
+        // setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
     }
 
     const [visible, setVisible] = useState(false)
@@ -95,14 +91,14 @@ export default function Carrinho({ navigation, route }) {
         <View style={styles.container}>
 
 
-            <Modal transparent visible={visible}>
+            {/* <Modal transparent visible={visible}>
                 <SafeAreaView style={{ flex: 1 }} onTouchStart={() => navigation.navigate('Caliope')}>
                     <Animated.View
                         style={[styles.popup, { transform: [{ scale }] }]}>
                         <Text style={styles.textWhite}>Falta R$100 para você ganhar frete grátis!</Text>
                     </Animated.View>
                 </SafeAreaView>
-            </Modal>
+            </Modal> */}
 
 
             <Text style={styles.info}>Produtos do Carrinho</Text>

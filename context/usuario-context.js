@@ -28,7 +28,7 @@ export default function UsuarioContextProvider({ children }) {
     }
 
     return (
-        <UsuarioContext.Provider value={{ nome: 'Marquinhos', user, isLoggedIn, signIn, signOut }}>
+        <UsuarioContext.Provider value={{ user, isLoggedIn, signIn, signOut }}>
             {children}
         </UsuarioContext.Provider>)
 }

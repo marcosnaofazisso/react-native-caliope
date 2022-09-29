@@ -2,6 +2,7 @@ import React from "react";
 import { Text } from "react-native";
 
 import UsuarioContextProvider from "./context/usuario-context";
+import CarrinhoContextProvider from "./context/carrinho-context";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -74,7 +75,9 @@ export default function App() {
     return (
         <NavigationContainer>
             <UsuarioContextProvider>
-                <Tabs />
+                <CarrinhoContextProvider>
+                    <Tabs />
+                </CarrinhoContextProvider>
             </UsuarioContextProvider>
         </NavigationContainer>
     )

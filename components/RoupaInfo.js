@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-import { inventario, carrinho } from "../data/data";
+// import { inventario, carrinho } from "../data/data";
+
+import { CarrinhoContext } from "../context/carrinho-context";
+
 
 export default function RoupaInfo(props) {
+
+    const { addItemAoCarrinho } = useContext(CarrinhoContext);
 
     const [itemComprado, setItemComprado] = useState(false)
 
@@ -18,11 +23,8 @@ export default function RoupaInfo(props) {
     };
 
     function adicionarItemAoCarrinho() {
+        addItemAoCarrinho(produtoAtual)
         setItemComprado(current => !current)
-        carrinho.push(produtoAtual);
-        inventario.splice(produtoAtual, 1);
-        // console.log("INVENTÁRIO:", inventario);
-        // console.log("CARRINHO:", carrinho);
 
     }
 

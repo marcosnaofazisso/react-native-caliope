@@ -12,14 +12,13 @@ import {
 
 
 import RoupaBox from '../components/RoupaBox.js'
-import { inventario } from "../data/data.js";
 
 import { UsuarioContext } from "../context/usuario-context.js";
+import { CarrinhoContext } from "../context/carrinho-context.js";
 
 export default function Home({ navigation }) {
 
-    const { nome } = useContext(UsuarioContext);
-
+    const { listaInventario } = useContext(CarrinhoContext);
 
 
     const [state, setState] = useState({
@@ -130,7 +129,7 @@ export default function Home({ navigation }) {
             <View style={styles.imageContainer}>
                 {!state.empty ? (
                     <FlatList
-                        data={inventario}
+                        data={listaInventario}
                         keyExtractor={(item) => item.id}
                         renderItem={renderRoupa}
                     />

@@ -140,7 +140,7 @@ export default function Caliope({ navigation }) {
                 </View>
                 <ActivityIndicator color="tomato" size='large' animating={isLoading} />
                 {!isLoading && <Conversation tipo={false}>{boasVindas}</Conversation>}
-                {!isLoading && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}`}</Conversation>}
+                {!isLoading && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}. Como posso te ajudar?`}</Conversation>}
                 <FlatList
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
