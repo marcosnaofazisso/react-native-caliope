@@ -14,13 +14,13 @@ export default function Menu({ navigation, route }) {
     const avatarMaciel = require('../assets/marcosmaciel@caliope.com.br.jpg')
     const avatarJojo = require('../assets/jonathan@caliope.com.br.jpg')
 
-    const objetoImagens = { avatarPadrao, avatarCris }
-
-    const [avatarEscolhido, setAvatarEscolhido] = useState(objetoImagens.avatarPadrao);
-
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [recoverPassword, setRecoverPassword] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmedNewPassword, setConfirmedNewPassword] = useState('');
+
     const [email, setEmail] = useState("cristine@caliope.com.br");
-    const [password, setPassword] = useState("1213456789");
+    const [password, setPassword] = useState("123456789");
 
     const [login, setLogin] = useState(false);
     const [signin, setSignIn] = useState(false);
@@ -74,7 +74,7 @@ export default function Menu({ navigation, route }) {
         const getAllUsuarios = async () => {
             const response = await apiUsuario.get('/usuario')
             setListaDeUsuarios(response.data)
-            console.log("GET USUARIOS Status Code: ", response.status);
+            console.log("GET Status Code: ", response.status);
             console.log("Response Data: ", JSON.stringify(response.data));
         }
         getAllUsuarios()
@@ -89,6 +89,26 @@ export default function Menu({ navigation, route }) {
 
 
 
+    async function alterarSenha(usuario, novaSenha, novaSenhaConfirmada) {
+        if (novaSenha != novaSenhaConfirmada) {
+            ToastAndroid.show("Por favor, confirme sua senha.", ToastAndroid.SHORT)
+        } else {
+            const response = await apiUsuario.put(`/usuario/${usuario.id}`, {
+                "nome": usuario.nome,
+                "cpf": usuario.cpf,
+                "numeroCelular": usuario.numeroCelular,
+                "email": usuario.email,
+                "senha": novaSenha
+            })
+            console.log("PUT Status Code:", response.status)
+            ToastAndroid.show("Senha alterada com sucesso!", ToastAndroid.SHORT)
+            setRecoverPassword(false)
+        }
+
+    }
+
+
+
     const PerfilUsuario = () => (
         <View>
             <Text>{usuario.nome}</Text>
@@ -97,12 +117,40 @@ export default function Menu({ navigation, route }) {
             <Text></Text>
             {!verPedidos &&
                 <TouchableOpacity onPress={() => setVerPedidos(true)}>
-                    <Text>Ver Meus Pedidos</Text>
+                    <Text >Ver Meus Pedidos</Text>
                 </TouchableOpacity>}
             <Text></Text>
-            <TouchableOpacity onPress={() => deletarConta(usuario.id)}>
-                <Text>Deletar Conta</Text>
+            <TouchableOpacity onPress={() => deletarConta(usuario.id)} style={styles.buttonDeletarConta}>
+                <Text style={styles.buttonTxt}>Deletar Conta</Text>
             </TouchableOpacity>
+            <Text></Text>
+            {!recoverPassword && <TouchableOpacity onPress={() => setRecoverPassword(true)}>
+                <Text>Alterar Senha</Text>
+            </TouchableOpacity>}
+            {recoverPassword &&
+                <View>
+                    <TextInput style={styles.input}
+                        secureTextEntry
+                        placeholder="Digite sua Nova Senha"
+                        value={newPassword}
+                        onChangeText={(novaSenha) => setNewPassword(novaSenha)}
+                    />
+                    <TextInput style={styles.input}
+                        secureTextEntry
+                        placeholder="Confirme sua Nova Senha"
+                        value={confirmedNewPassword}
+                        onChangeText={(novaSenhaConfirmada) => setConfirmedNewPassword(novaSenhaConfirmada)}
+                    />
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity onPress={() => setRecoverPassword(false)} style={styles.button}>
+                            <Text style={styles.buttonTxt}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => alterarSenha(usuario, newPassword, confirmedNewPassword)} style={styles.button}>
+                            <Text style={styles.buttonTxt}>Alterar Senha</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            }
         </View>
     )
 
@@ -113,11 +161,17 @@ export default function Menu({ navigation, route }) {
             {!isLoggedIn &&
                 (<View style={styles.container}>
                     {!testing && <Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
-                    <Image style={{ height: 90, width: 90, borderRadius: 40 }} source={usuariosTeste[email] ? usuariosTeste[email] : avatarPadrao} />
+                    <Image style={styles.imagemAvatar} source={usuariosTeste[email] ? usuariosTeste[email] : avatarPadrao} />
 
                     {testing && <PerfilUsuario />}
 
-                    {verPedidos && <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>}
+                    {verPedidos &&
+                        <View>
+                            <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>
+                            <TouchableOpacity onPress={() => setVerPedidos(false)}>
+                                <Text>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>}
 
                 </View>)}
             {verPedidos && testing && <View style={styles.pedidosContainer}>
@@ -146,7 +200,7 @@ export default function Menu({ navigation, route }) {
                         onChangeText={(senha) => setPassword(senha)}
                     />
                     {!signin && !testing && <TouchableOpacity onPress={() => navigation.navigate("Home6")} style={{ alignSelf: 'center', marginTop: 15 }}>
-                        <Text>Se Cadastrar</Text>
+                        <Text>Criar um Cadastro</Text>
                     </TouchableOpacity>}
 
                     <View style={styles.buttonContainer}>
@@ -222,6 +276,20 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 5,
     },
+    buttonVerPedidos: {
+        backgroundColor: "grey",
+        alignSelf: "flex-start",
+        padding: 4,
+        marginLeft: 10,
+        borderRadius: 5,
+    },
+    buttonDeletarConta: {
+        backgroundColor: "red",
+        alignSelf: "flex-start",
+        padding: 4,
+        marginLeft: 10,
+        borderRadius: 5,
+    },
     buttonTxt: {
         color: "white",
     },
@@ -250,5 +318,10 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 10,
         marginTop: 10,
+    },
+    imagemAvatar: {
+        height: 90,
+        width: 90,
+        borderRadius: 40
     },
 });
