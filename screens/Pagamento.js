@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList } from "react-native";
 
+import { UsuarioContext } from "../context/usuario-context";
+import { CarrinhoContext } from "../context/carrinho-context";
 
-import { inventario, carrinho } from "../data/data";
 
 export default function Pagamento({ navigation, route }) {
 
-    const [listaInventario] = useState(inventario);
-    const [listaCarrinho, setListaCarrinho] = useState(carrinho);
+    const { user } = useContext(UsuarioContext)
+    const { limparItemsDoCarrinho } = useContext(CarrinhoContext);
 
     const pedidoCompleto = route.params.pedido;
 
@@ -16,18 +17,7 @@ export default function Pagamento({ navigation, route }) {
     }, 0);
 
     function finalizarPedido() {
-        listaCarrinho.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
-            var index = listaCarrinho
-                .map((x) => {
-                    return x.id;
-                })
-                .indexOf(itemDoCarrinho.id);
-            listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
-
-        });
-        const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
-        setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
-
+        limparItemsDoCarrinho()
         navigation.navigate('Home')
     }
 
@@ -37,8 +27,9 @@ export default function Pagamento({ navigation, route }) {
             <Text></Text>
             {pedidoCompleto.map((item) => {
                 return (
-                    <View key={item.id}>
+                    <View key={item.id} style={styles.containerItemPrice}>
                         <Text>1 x {item.title}</Text>
+                        <Text>R${item.price}</Text>
                     </View>
                 )
             })}
@@ -47,11 +38,23 @@ export default function Pagamento({ navigation, route }) {
             <Text></Text>
             <Text>Total do Pedido: R$ {JSON.stringify(totalPedido)}</Text>
             <Text></Text>
-            <Text>Você receberá as informações de pagamento por email, combinado?</Text>
+            {(Object.keys(user).length != 0) &&
+                <View>
+                    <Text>Você receberá as informações de pagamento pelo email: {user.email} combinado?</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => finalizarPedido()}>
+                        <Text style={styles.buttonTxt}>Entendido</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+            {(Object.keys(user).length == 0) &&
+                <View>
+                    <Text>Cadastre-se ou faça um login para finalizar sua compra.</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Menu")}>
+                        <Text style={styles.buttonTxt}>Fazer Login / Cadastro</Text>
+                    </TouchableOpacity>
+                </View>}
             <Text></Text>
-            <TouchableOpacity style={styles.button} onPress={() => finalizarPedido()}>
-                <Text style={styles.buttonTxt}>Entendido</Text>
-            </TouchableOpacity>
+
         </View>
     );
 
@@ -88,5 +91,9 @@ const styles = StyleSheet.create({
         width: 90,
         height: 40,
         backgroundColor: "red",
+    },
+    containerItemPrice: {
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 });

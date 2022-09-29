@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { Pressable, StatusBar, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react'
+import { Pressable, StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
 
 import Conversation from './Conversation';
-import MenuBar from './MenuBar';
 
 import api from './api';
 import Voice from '@react-native-community/voice';
@@ -12,7 +11,17 @@ import Tts from 'react-native-tts';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
+
+import { UsuarioContext } from './context/usuario-context';
+
+import { fotosDosUsuariosTeste } from './data/fotosUsuarios';
+
+
 export default function Caliope({ navigation }) {
+
+
+    const { user } = useContext(UsuarioContext)
+
 
     const [sessionId, setSessionId] = useState('')
     const [audioEnviado, setAudioEnviado] = useState(false)
@@ -62,7 +71,7 @@ export default function Caliope({ navigation }) {
     }
 
     const ouvirResposta = () => {
-        if (resposta.length <= 1) alert("Áudio indisponivel, manda um mensagem...")
+        if (resposta.length <= 1) ToastAndroid.show("Áudio indisponível. Mande uma mensagem para começar...", ToastAndroid.SHORT);
         else {
             Tts.setDefaultLanguage('pt-BR');
             Tts.setDefaultRate(0.6);
@@ -92,7 +101,6 @@ export default function Caliope({ navigation }) {
 
     useEffect(() => {
         console.log("Carregando....")
-        // console.log("AUDIO ENVIADO! ", audioEnviado)
         mandarMensagem()
     }, [audioEnviado])
 
@@ -122,15 +130,16 @@ export default function Caliope({ navigation }) {
             <View style={styles.container}>
                 <StatusBar style="light" backgroundColor="black" />
                 <View style={styles.menuContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
                         <Image style={styles.menuBar} source={require('./assets/menu.jpg')} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
-                        <Image style={styles.avatar} source={require('./assets/avatar-menu.png')} />
+                    <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
+                        <Image style={styles.avatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
                     </TouchableOpacity>
                 </View>
                 <ActivityIndicator color="tomato" size='large' animating={isLoading} />
                 {!isLoading && <Conversation tipo={false}>{boasVindas}</Conversation>}
+                {!isLoading && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}. Como posso te ajudar?`}</Conversation>}
                 <FlatList
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
@@ -210,7 +219,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 6,
-        height:"auto",
+        height: "auto",
         borderBottomColor: "gray",
         borderWidth: 1,
         borderRadius: 10,
@@ -248,7 +257,7 @@ const styles = StyleSheet.create({
     microphoneIcon: {
         color: 'black',
         marginLeft: 10,
-        marginRight:10,
+        marginRight: 10,
         width: 35,
         height: 35,
     },
@@ -283,9 +292,10 @@ const styles = StyleSheet.create({
     avatar: {
         marginLeft: 20,
         marginTop: 8,
-        width: 38,
-        height: 38,
-        tintColor: 'black',
+        width: 50,
+        height: 50,
+        borderRadius: 40
+
     },
     menuContainer: {
         // paddingHorizontal: 16,

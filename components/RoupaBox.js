@@ -47,13 +47,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     img: {
-        // alignSelf: "center",
         width: 250,
         height: 250,
     },
     txtImg: {
-        alignSelf: "flex-start",
+        alignSelf: "center",
         fontWeight: "bold",
+        paddingBottom: 20,
     },
     priceImg: {
         alignSelf: "flex-start",

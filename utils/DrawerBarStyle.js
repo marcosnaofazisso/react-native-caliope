@@ -11,15 +11,20 @@ export const drawerOptionsLoja = (navigation) => {
 
         headerRight: () => {
             return (
-                <TouchableOpacity onPress={() => navigation.navigate("Home3")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Carrinho")}>
                     <Image style={styles.carrinho} source={require('../assets/carrinho.png')} />
                 </TouchableOpacity>
             );
         },
         headerLeft: () => {
             return (
+<<<<<<< HEAD
                 <TouchableOpacity onPress={() => navigation.navigate("Home5")}>
                     <Image style={styles.menuIcon} source={require('../assets/menu.jpg')} />
+=======
+                <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
+                    <Image style={{ height: 40, width: 40, marginLeft: 10 }} source={require('../assets/menu.jpg')} />
+>>>>>>> c24975b4f406d4582c381fff55e470603e1960e2
                 </TouchableOpacity>
             );
         },
@@ -39,10 +44,10 @@ export const drawerOptionsLoja = (navigation) => {
 
 const styles = StyleSheet.create({
     carrinho: {
-        width:20,
+        width: 20,
         height: 20,
-        marginLeft:'auto',
-        marginRight:10,
+        marginLeft: 'auto',
+        marginRight: 10,
     },
     menuIcon: {
         height: 40,

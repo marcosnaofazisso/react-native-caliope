@@ -4,12 +4,10 @@ import React, { useContext, useEffect } from "react";
 import BotaoChat from "../components/BotaoChat";
 import RoupaInfo from "../components/RoupaInfo";
 
-import { inventario, carrinho } from "../data/data";
-
 export default function RoupaInfos({ navigation, route }) {
 
   function onPressNavigation() {
-    navigation.navigate("Home3");
+    navigation.navigate("Carrinho");
   }
 
   const produtoSelecionado = {
