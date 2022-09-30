@@ -16,18 +16,19 @@ export default function Menu({ navigation, route }) {
 
     const { user, isLoggedIn, signIn, signOut } = useContext(UsuarioContext)
 
+    const [email, setEmail] = useState("cristine@caliope.com.br");
+    const [password, setPassword] = useState("123456789");
+
+
+    const [verPedidos, setVerPedidos] = useState(false);
+    const [listaDeUsuarios, setListaDeUsuarios] = useState([]);
+    const [renderizarPagina, setRenderizarPagina] = useState(false)
+
 
     const [recoverPassword, setRecoverPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [confirmedNewPassword, setConfirmedNewPassword] = useState('');
 
-    const [email, setEmail] = useState("cristine@caliope.com.br");
-    const [password, setPassword] = useState("123456789");
-
-    const [signin, setSignIn] = useState(false);
-    const [verPedidos, setVerPedidos] = useState(false);
-
-    const [listaDeUsuarios, setListaDeUsuarios] = useState([]);
 
 
     function logarContaTeste() {
@@ -56,26 +57,33 @@ export default function Menu({ navigation, route }) {
         const pedidoItem = {
             id: item.id,
             numeroPedido: item.numeroPedido,
-            dataPedido: item.dataPedido,
-            totalItems: item.totalItems,
+            dataPedido: item.data,
+            totalItems: item.quantidadeItems,
             valorTotal: item.valorTotal
         }
 
         return (
             <Pedido {...pedidoItem} />
-            )
+        )
 
     }
 
     useEffect(() => {
-        const getAllUsuarios = async () => {
-            const response = await apiUsuario.get('/usuario')
-            setListaDeUsuarios(response.data)
-            console.log("GET Status Code: ", response.status);
-            console.log("Response Data: ", JSON.stringify(response.data));
+        if (!isLoggedIn) {
+            const getAllUsuarios = async () => {
+                const response = await apiUsuario.get('/usuario')
+                setListaDeUsuarios(response.data)
+                console.log("GET Status Code: ", response.status);
+                console.log("Response Data: ", JSON.stringify(response.data));
+            }
+            getAllUsuarios()
         }
-        getAllUsuarios()
     }, [])
+
+    useEffect(() => {
+        console.log("Recarregando...", renderizarPagina)
+        setRenderizarPagina(current => !current)
+    }, [isLoggedIn])
 
     async function deletarConta(id) {
         const response = await apiUsuario.delete(`/usuario/${id}`)
@@ -115,48 +123,48 @@ export default function Menu({ navigation, route }) {
             </View>
 
             <View style={styles.View}>
-            {!verPedidos &&
-                <TouchableOpacity style={styles.buttonPedido} onPress={() => setVerPedidos(true)}>
-                    <Text style={styles.buttonTxt}>Ver Meus Pedidos</Text>
+                {!verPedidos &&
+                    <TouchableOpacity style={styles.buttonPedido} onPress={() => setVerPedidos(true)}>
+                        <Text style={styles.buttonTxt}>Ver Meus Pedidos</Text>
+                    </TouchableOpacity>}
+
+                <TouchableOpacity onPress={() => deletarConta(user.id)} style={styles.buttonDeletarConta}>
+                    <Text style={styles.buttonTxt}>Deletar Conta</Text>
+                </TouchableOpacity>
+
+                {!recoverPassword && <TouchableOpacity style={styles.buttonPedido} onPress={() => setRecoverPassword(true)}>
+                    <Text style={styles.buttonTxt}>Alterar Senha</Text>
                 </TouchableOpacity>}
 
-            <TouchableOpacity onPress={() => deletarConta(user.id)} style={styles.buttonDeletarConta}>
-                <Text style={styles.buttonTxt}>Deletar Conta</Text>
-            </TouchableOpacity>
-
-            {!recoverPassword && <TouchableOpacity style={styles.buttonPedido} onPress={() => setRecoverPassword(true)}>
-                <Text style={styles.buttonTxt}>Alterar Senha</Text>
-            </TouchableOpacity>}
-
-            <TouchableOpacity style={styles.buttonSair} onPress={() => deslogarContaTeste()}>
-                <Text style={styles.buttonTxt}>Sair</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonSair} onPress={() => deslogarContaTeste()}>
+                    <Text style={styles.buttonTxt}>Sair</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.ViewSetSenha}>
-            {recoverPassword &&
-                <View>
-                    <TextInput style={styles.input}
-                        secureTextEntry
-                        placeholder="Digite sua Nova Senha"
-                        value={newPassword}
-                        onChangeText={(novaSenha) => setNewPassword(novaSenha)}
-                    />
-                    <TextInput style={styles.input}
-                        secureTextEntry
-                        placeholder="Confirme sua Nova Senha"
-                        value={confirmedNewPassword}
-                        onChangeText={(novaSenhaConfirmada) => setConfirmedNewPassword(novaSenhaConfirmada)}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => setRecoverPassword(false)} style={styles.button}>
-                            <Text style={styles.buttonTxt}>Cancelar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonAletarSenha} onPress={() => alterarSenha(user, newPassword, confirmedNewPassword)} styles={styles.button}>
-                            <Text style={styles.buttonTxt}>Alterar Senha</Text>
-                        </TouchableOpacity>
+                {recoverPassword &&
+                    <View>
+                        <TextInput style={styles.input}
+                            secureTextEntry
+                            placeholder="Digite sua Nova Senha"
+                            value={newPassword}
+                            onChangeText={(novaSenha) => setNewPassword(novaSenha)}
+                        />
+                        <TextInput style={styles.input}
+                            secureTextEntry
+                            placeholder="Confirme sua Nova Senha"
+                            value={confirmedNewPassword}
+                            onChangeText={(novaSenhaConfirmada) => setConfirmedNewPassword(novaSenhaConfirmada)}
+                        />
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity onPress={() => setRecoverPassword(false)} style={styles.button}>
+                                <Text style={styles.buttonTxt}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonAletarSenha} onPress={() => alterarSenha(user, newPassword, confirmedNewPassword)} styles={styles.button}>
+                                <Text style={styles.buttonTxt}>Alterar Senha</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            }
+                }
             </View>
         </View>
     )
@@ -165,48 +173,35 @@ export default function Menu({ navigation, route }) {
         <SafeAreaView style={styles.safeArea}>
             {!isLoggedIn &&
                 (<View style={styles.container}>
-                    {<Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
                     <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[email] ? fotosDosUsuariosTeste[email] : fotosDosUsuariosTeste['avatarPadrao']} />
-
-                    {verPedidos &&
-                        <View>
-                            <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>
-                            <TouchableOpacity onPress={() => setVerPedidos(false)}>
-                                <Text>Cancelar</Text>
-                            </TouchableOpacity>
-                        </View>}
-
                 </View>)}
             {isLoggedIn &&
-                (<View style={styles.container}>
+                <View style={styles.container}>
                     <Image style={styles.imagemAvatar}
-                     source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
+                        source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
 
                     <PerfilUsuario />
 
-                    {verPedidos &&
-                        <View>
-                            <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>
-                            <TouchableOpacity onPress={() => setVerPedidos(false)}>
-                                <Text>Cancelar</Text>
-                            </TouchableOpacity>
-                        </View>}
+                </View>}
 
-                </View>)}
             {verPedidos && <View style={styles.pedidosContainer}>
-                {!listaPedidos.empty ? (
+                <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10, alignSelf: 'center' }}>Meus Pedidos</Text>
+                {!user.pedidos.empty ? (
                     <FlatList
-                        data={listaPedidos}
+                        data={user.pedidos}
                         keyExtractor={(item) => item.id}
                         renderItem={renderPedido}
                     />
                 ) : (
                     <Text>Nenhum item encontrado 😔</Text>
                 )}
+                <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center' }}>
+                    <Text>Cancelar</Text>
+                </TouchableOpacity>
             </View>}
-            {!isLoggedIn && <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>}
             {!isLoggedIn &&
                 <View style={styles.inputContainer}>
+                    <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>
                     <TextInput style={styles.input}
                         placeholder="Email"
                         value={email}
@@ -218,9 +213,9 @@ export default function Menu({ navigation, route }) {
                         value={password}
                         onChangeText={(senha) => setPassword(senha)}
                     />
-                    {!signin && <TouchableOpacity onPress={() => navigation.navigate("Cadastro")} style={{ alignSelf: 'center', marginTop: 15 }}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Cadastro")} style={{ alignSelf: 'center', marginTop: 15 }}>
                         <Text>Criar um Cadastro</Text>
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
 
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
@@ -231,84 +226,55 @@ export default function Menu({ navigation, route }) {
                         </TouchableOpacity>
                     </View>
                 </View>}
-            {signin &&
-                <View style={styles.inputContainer}>
-                    <TextInput style={styles.input}
-                        placeholder="Nome"
-                        onChangeText={(nome) => setEmail(nome)}
-                    />
-                    <TextInput style={styles.input}
-                        placeholder="Email"
-                        onChangeText={(email) => setEmail(email)}
-                    />
-                    <TextInput style={styles.input}
-                        secureTextEntry
-                        placeholder="Senha"
-                        onChangeText={(senha) => setSenha(senha)}
-                    />
-                    <TextInput style={styles.input}
-                        secureTextEntry
-                        placeholder="Confirme a Senha"
-                        onChangeText={(senha) => setSenha(senha)}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => setSignIn(false)} style={styles.button}>
-                            <Text style={styles.buttonTxt}>Cancelar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonTxt}>Salvar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>}
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
-    ViewMenu :{
-        width:"100%",
-        textAlign:"left",
+    ViewMenu: {
+        width: "100%",
+        textAlign: "left",
     },
-    textStyle:{
-        fontSize:16,
+    textStyle: {
+        fontSize: 16,
         color: "#212121",
-        marginBottom:2,
+        marginBottom: 2,
     },
-    textName:{
-        fontSize:16,
+    textName: {
+        fontSize: 16,
         color: "#212121",
-        marginBottom:2,
+        marginBottom: 2,
         fontWeight: "bold",
         textDecorationL: "overline",
     },
     container: {
         flex: 2,
-        width:"100%",
+        width: "100%",
         backgroundColor: "#FAF8F8",
         fontFamily: "Roboto",
         alignItems: 'center',
         paddingTop: 20,
     },
-    safeArea:{
+    safeArea: {
         flex: 2,
-        height:"auto",
+        height: "auto",
         overflowy: "auto",
-        width:"100%",
+        width: "100%",
     },
     pedidosContainer: {
         flex: 3,
-        height:"auto",
-        width:"100%",
+        height: "auto",
+        width: "100%",
         overflow: "scroll",
         backgroundColor: "#FAF8F8",
         paddingRight: 15,
     },
-    View:{
+    View: {
         marginTop: 5,
         flexDirection: "row",
     },
-    ViewSetSenha:{
+    ViewSetSenha: {
         flexDirection: "column",
-        flex:1,
+        flex: 1,
     },
     input: {
         borderBottomWidth: 1,
@@ -340,7 +306,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 5,
     },
-    buttonAletarSenha:{
+    buttonAletarSenha: {
         backgroundColor: "#42d66a",
         alignSelf: "flex-start",
         padding: 4,
@@ -370,7 +336,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 20,
-        paddingBottom:100,
+        paddingBottom: 100,
     },
     signOrLoginContainer: {
         alignItems: 'center',
@@ -394,7 +360,7 @@ const styles = StyleSheet.create({
     imagemAvatar: {
         height: 100,
         width: 100,
-        borderRadius: 100/2,
+        borderRadius: 100 / 2,
         borderColor: '#252525',
         borderWidth: 2,
     },
