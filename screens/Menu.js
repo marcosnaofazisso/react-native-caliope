@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, FlatList, SafeA
 
 import Pedido from "./Pedido";
 
-import { listaPedidos } from "../data/listaPedidos";
 import { fotosDosUsuariosTeste } from "../data/fotosUsuarios";
 import { apiUsuario } from "../api";
 
@@ -11,7 +10,7 @@ import { apiUsuario } from "../api";
 import { UsuarioContext } from "../context/usuario-context";
 
 
-export default function Menu({ navigation, route }) {
+export default function Menu({ navigation }) {
 
 
     const { user, isLoggedIn, signIn, signOut } = useContext(UsuarioContext)
@@ -47,6 +46,8 @@ export default function Menu({ navigation, route }) {
 
     }
     function deslogarContaTeste() {
+        setRecoverPassword(false)
+        setVerPedidos(false)
         signOut()
 
     }
@@ -103,7 +104,8 @@ export default function Menu({ navigation, route }) {
                 "cpf": usuario.cpf,
                 "numeroCelular": usuario.numeroCelular,
                 "email": usuario.email,
-                "senha": novaSenha
+                "senha": novaSenha,
+                "pedidos": usuario.pedidos
             })
             console.log("PUT Status Code:", response.status)
             ToastAndroid.show("Senha alterada com sucesso!", ToastAndroid.SHORT)
