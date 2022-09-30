@@ -22,15 +22,17 @@ export default function Caliope({ navigation }) {
 
     const { user } = useContext(UsuarioContext)
 
-
     const [sessionId, setSessionId] = useState('')
     const [audioEnviado, setAudioEnviado] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
+
+
     const [mensagem, setMensagem] = useState({})
     const [resposta, setResposta] = useState([{}])
     const [conversa, setConversa] = useState([])
 
     const [boasVindas] = useState("Oi, eu sou Calíope. 🥰")
+    const [mostrarBoasVindas, setMostrarBoasVindas] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         const destroyAudio = async () => {
@@ -79,6 +81,11 @@ export default function Caliope({ navigation }) {
             Tts.speak(texto);
         }
     };
+
+    const limparConversa = () => {
+        setMostrarBoasVindas(false)
+        setConversa([])
+    }
 
     const onSpeechRecognized = (e) => {
         console.log("recogninzed", e)
@@ -137,9 +144,9 @@ export default function Caliope({ navigation }) {
                         <Image style={styles.avatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
                     </TouchableOpacity>
                 </View>
-                <ActivityIndicator color="tomato" size='large' animating={isLoading} />
-                {!isLoading && <Conversation tipo={false}>{boasVindas}</Conversation>}
-                {!isLoading && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}. Como posso te ajudar?`}</Conversation>}
+                {isLoading && <ActivityIndicator color="tomato" size='large' animating={isLoading} />}
+                {!isLoading && mostrarBoasVindas && <Conversation tipo={false}>{boasVindas}</Conversation>}
+                {!isLoading && mostrarBoasVindas && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}. Como posso te ajudar?`}</Conversation>}
                 <FlatList
                     data={conversa}
                     keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
@@ -170,11 +177,12 @@ export default function Caliope({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.clearField}>
-                    <TouchableOpacity onPress={() => setConversa([])}>
-                        <Text style={styles.clearChat}>Limpar conversa</Text>
-                    </TouchableOpacity>
-                </View>
+                {conversa.length > 1 ?
+                    <View style={styles.clearField}>
+                        <TouchableOpacity onPress={limparConversa}>
+                            <Text style={styles.clearChat}>Limpar conversa</Text>
+                        </TouchableOpacity>
+                    </View> : null}
             </View>
             <View>
             </View>
@@ -301,6 +309,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: "white",
-        paddingTop:0,
+        paddingTop: 0,
     },
 });
