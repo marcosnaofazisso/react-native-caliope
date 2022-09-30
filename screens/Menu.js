@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView, Fla
 
 import Pedido from "./Pedido";
 
-import { listaPedidos } from "../data/listaPedidos";
 import { fotosDosUsuariosTeste } from "../data/fotosUsuarios";
 import { apiUsuario } from "../api";
 
@@ -56,14 +55,14 @@ export default function Menu({ navigation, route }) {
         const pedidoItem = {
             id: item.id,
             numeroPedido: item.numeroPedido,
-            dataPedido: item.dataPedido,
-            totalItems: item.totalItems,
+            dataPedido: item.data,
+            totalItems: item.quantidadeItems,
             valorTotal: item.valorTotal
         }
 
         return (
             <Pedido {...pedidoItem} />
-            )
+        )
 
     }
 
@@ -111,6 +110,7 @@ export default function Menu({ navigation, route }) {
             <Text>{user.nome}</Text>
             <Text>{user.numeroCelular}</Text>
             <Text>{user.email}</Text>
+            {/* <Text>{JSON.stringify(user.pedidos)}</Text> */}
             <Text></Text>
             {!verPedidos &&
                 <TouchableOpacity onPress={() => setVerPedidos(true)}>
@@ -163,13 +163,7 @@ export default function Menu({ navigation, route }) {
                     {<Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
                     <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[email] ? fotosDosUsuariosTeste[email] : fotosDosUsuariosTeste['avatarPadrao']} />
 
-                    {verPedidos &&
-                        <View>
-                            <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10 }}>Meus Pedidos</Text>
-                            <TouchableOpacity onPress={() => setVerPedidos(false)}>
-                                <Text>Cancelar</Text>
-                            </TouchableOpacity>
-                        </View>}
+
 
                 </View>)}
             {isLoggedIn &&
@@ -188,15 +182,22 @@ export default function Menu({ navigation, route }) {
 
                 </View>)}
             {verPedidos && <View style={styles.pedidosContainer}>
-                {!listaPedidos.empty ? (
+                <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10, alignSelf: 'center' }}>Meus Pedidos</Text>
+                {!user.pedidos.empty ? (
                     <FlatList
-                        data={listaPedidos}
+                        data={user.pedidos}
                         keyExtractor={(item) => item.id}
                         renderItem={renderPedido}
                     />
                 ) : (
                     <Text>Nenhum item encontrado 😔</Text>
                 )}
+                {verPedidos &&
+                    <View>
+                        <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center' }}>
+                            <Text>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>}
             </View>}
             {!isLoggedIn && <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>}
             {!isLoggedIn &&
@@ -260,22 +261,22 @@ export default function Menu({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 2,
-        width:"100%",
+        width: "100%",
         backgroundColor: "#FAF8F8",
         fontFamily: "Roboto",
         alignItems: 'center',
         paddingTop: 20,
     },
-    safeArea:{
+    safeArea: {
         flex: 2,
-        height:"auto",
+        height: "auto",
         overflowy: "auto",
-        width:"100%",
+        width: "100%",
     },
     pedidosContainer: {
         flex: 3,
-        height:"auto",
-        width:"100%",
+        height: "auto",
+        width: "100%",
         overflow: "scroll",
         backgroundColor: "#FAF8F8",
         paddingRight: 15,

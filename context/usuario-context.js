@@ -18,6 +18,7 @@ export default function UsuarioContextProvider({ children }) {
             numeroCelular: usuario.numeroCelular,
             email: usuario.email,
             senha: usuario.senha,
+            pedidos: usuario.pedidos,
             status: 'ativo',
         })
         setIsLoggedIn(true)
