@@ -152,6 +152,9 @@ export default function Caliope({ navigation }) {
                     <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
                         <Image style={styles.avatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Carrinho")}>
+                        <Image style={styles.carrinho} source={require('./assets/carrinho.png')} />
+                    </TouchableOpacity>
                 </View>
                 {isLoading && <ActivityIndicator color="tomato" size='large' animating={isLoading} />}
                 {!isLoading &&
@@ -305,6 +308,12 @@ const styles = StyleSheet.create({
         height: 38,
         tintColor: 'black',
         marginLeft: 10,
+        marginTop: 10,
+    },
+    carrinho: {
+        width: 30,
+        height: 30,
+        marginLeft: 230,
         marginTop: 10,
     },
     avatar: {
