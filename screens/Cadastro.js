@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, TextInput, ToastAndroid } from "react-native";
 
 import { apiUsuario } from '../api'

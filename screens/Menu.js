@@ -62,7 +62,8 @@ export default function Menu({ navigation, route }) {
         }
 
         return (
-            <Pedido {...pedidoItem} />)
+            <Pedido {...pedidoItem} />
+            )
 
     }
 
@@ -156,7 +157,7 @@ export default function Menu({ navigation, route }) {
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.safeArea}>
             {!isLoggedIn &&
                 (<View style={styles.container}>
                     {<Text>Você está logado anonimamente, para comprar entre ou faça um cadastro.</Text>}
@@ -258,18 +259,26 @@ export default function Menu({ navigation, route }) {
 }
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
-        backgroundColor: "#FAF8F8",
-        // fontFamily: "Roboto",
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingHorizontal: 20,
-    },
-    pedidosContainer: {
-        flexGrow: 1,
+        flex: 2,
+        width:"100%",
         backgroundColor: "#FAF8F8",
         fontFamily: "Roboto",
-        paddingHorizontal: 10,
+        alignItems: 'center',
+        paddingTop: 20,
+    },
+    safeArea:{
+        flex: 2,
+        height:"auto",
+        overflowy: "auto",
+        width:"100%",
+    },
+    pedidosContainer: {
+        flex: 3,
+        height:"auto",
+        width:"100%",
+        overflow: "scroll",
+        backgroundColor: "#FAF8F8",
+        paddingRight: 15,
     },
     input: {
         borderBottomWidth: 1,

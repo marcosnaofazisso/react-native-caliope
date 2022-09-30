@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList } from "react-native";
+import React from "react";
+import { Text, View, StyleSheet} from "react-native";
 
 
 export default function Pedido(props) {
@@ -8,11 +8,10 @@ export default function Pedido(props) {
 
     return (
         <View style={styles.item}>
-            <Text>Pedido No: {item.numeroPedido}</Text>
-            <Text>Data: {item.dataPedido}</Text>
-            <Text>Qtd de Items: {item.totalItems}</Text>
-            <Text>Total: {item.valorTotal}</Text>
-            <Text></Text>
+            <Text style={styles.text}>Pedido nº: {item.numeroPedido}</Text>
+            <Text style={styles.text}>Data: {item.dataPedido}</Text>
+            <Text style={styles.text}>Qtd de Items: {item.totalItems}</Text>
+            <Text style={styles.text}>Total: {item.valorTotal}</Text>
         </View>
     );
 
@@ -22,9 +21,13 @@ export default function Pedido(props) {
 const styles = StyleSheet.create({
 
     item: {
-        backgroundColor: '#f9c2ff',
+        backgroundColor: '#f1f1f1',
         padding: 20,
+        width: '100%',
         marginVertical: 8,
         marginHorizontal: 16,
     },
+    text: {
+        color: '#252525',
+    }
 });
