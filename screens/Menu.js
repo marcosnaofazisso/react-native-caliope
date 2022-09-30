@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView, FlatList, SafeAreaView, Image, Alert, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, FlatList, SafeAreaView, Image, Alert, TextInput } from "react-native";
 
 import Pedido from "./Pedido";
 
@@ -108,25 +108,31 @@ export default function Menu({ navigation, route }) {
 
     const PerfilUsuario = () => (
         <View>
-            <Text>{user.nome}</Text>
-            <Text>{user.numeroCelular}</Text>
-            <Text>{user.email}</Text>
-            <Text></Text>
-            {!verPedidos &&
-                <TouchableOpacity onPress={() => setVerPedidos(true)}>
-                    <Text >Ver Meus Pedidos</Text>
+            <View style={styles.ViewMenu}>
+                <Text style={styles.textName}>{user.nome}</Text>
+                <Text style={styles.textStyle}>{user.numeroCelular}</Text>
+                <Text style={styles.textStyleLast}>{user.email}</Text>
+            </View>
+
+            <View style={styles.View}>
+                {!verPedidos &&
+                    <TouchableOpacity style={styles.buttonPedido} onPress={() => setVerPedidos(true)}>
+                        <Text style={styles.buttonTxt}>Ver Meus Pedidos</Text>
+                    </TouchableOpacity>}
+
+                <TouchableOpacity onPress={() => deletarConta(user.id)} style={styles.buttonDeletarConta}>
+                    <Text style={styles.buttonTxt}>Deletar Conta</Text>
+                </TouchableOpacity>
+
+                {!recoverPassword && <TouchableOpacity style={styles.buttonPedido} onPress={() => setRecoverPassword(true)}>
+                    <Text style={styles.buttonTxt}>Alterar Senha</Text>
                 </TouchableOpacity>}
-            <Text></Text>
-            <TouchableOpacity onPress={() => deletarConta(user.id)} style={styles.buttonDeletarConta}>
-                <Text style={styles.buttonTxt}>Deletar Conta</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => deslogarContaTeste()}>
-                <Text>Sair</Text>
-            </TouchableOpacity>
-            <Text></Text>
-            {!recoverPassword && <TouchableOpacity onPress={() => setRecoverPassword(true)}>
-                <Text>Alterar Senha</Text>
-            </TouchableOpacity>}
+
+                <TouchableOpacity style={styles.buttonSair} onPress={() => deslogarContaTeste()}>
+                    <Text style={styles.buttonTxt}>Sair</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.ViewSetSenha}>
             {recoverPassword &&
                 <View>
                     <TextInput style={styles.input}
@@ -145,12 +151,13 @@ export default function Menu({ navigation, route }) {
                         <TouchableOpacity onPress={() => setRecoverPassword(false)} style={styles.button}>
                             <Text style={styles.buttonTxt}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => alterarSenha(user, newPassword, confirmedNewPassword)} style={styles.button}>
+                        <TouchableOpacity style={styles.buttonAletarSenha} onPress={() => alterarSenha(user, newPassword, confirmedNewPassword)} styles={styles.button}>
                             <Text style={styles.buttonTxt}>Alterar Senha</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             }
+            </View>
         </View>
     )
 
@@ -174,7 +181,8 @@ export default function Menu({ navigation, route }) {
                 </View>)}
             {isLoggedIn &&
                 (<View style={styles.container}>
-                    <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
+                    <Image style={styles.imagemAvatar}
+                     source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
 
                     <PerfilUsuario />
 
@@ -258,6 +266,26 @@ export default function Menu({ navigation, route }) {
     )
 }
 const styles = StyleSheet.create({
+    ViewMenu :{
+        width:"100%",
+        textAlign:"left",
+    },
+    textStyle:{
+        fontSize:16,
+        color: "#212121",
+        marginBottom:2,
+    },
+    textStyleLast:{
+        fontSize:16,
+        color: "#212121",
+    },
+    textName:{
+        fontSize:16,
+        color: "#212121",
+        marginBottom:2,
+        fontWeight: "bold",
+        textDecorationLine: "underline",
+    },
     container: {
         flex: 2,
         width:"100%",
@@ -280,13 +308,21 @@ const styles = StyleSheet.create({
         backgroundColor: "#FAF8F8",
         paddingRight: 15,
     },
+    View:{
+        width: "100%",
+        marginTop: 10,
+        flexDirection: "row",
+    },
+    ViewSetSenha:{
+        flexDirection: "column",
+        flex:1,
+    },
     input: {
         borderBottomWidth: 1,
         borderBottomColor: "#000",
     },
     inputContainer: {
         backgroundColor: "#FAF8F8",
-        // fontFamily: "Roboto",
         paddingTop: 20,
         paddingHorizontal: 20,
     },
@@ -311,6 +347,27 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 5,
     },
+    buttonAletarSenha:{
+        backgroundColor: "#42d66a",
+        alignSelf: "flex-start",
+        padding: 4,
+        marginLeft: 10,
+        borderRadius: 5,
+    },
+    buttonPedido: {
+        backgroundColor: "grey",
+        alignSelf: "flex-start",
+        padding: 4,
+        marginLeft: 10,
+        borderRadius: 5,
+    },
+    buttonSair: {
+        backgroundColor: "black",
+        alignSelf: "flex-start",
+        padding: 4,
+        marginLeft: 10,
+        borderRadius: 5,
+    },
     buttonTxt: {
         color: "white",
     },
@@ -320,6 +377,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 20,
+        paddingBottom:100,
     },
     signOrLoginContainer: {
         alignItems: 'center',
@@ -341,8 +399,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     imagemAvatar: {
-        height: 90,
-        width: 90,
-        borderRadius: 40
+        height: 100,
+        width: 100,
+        borderRadius: 100/2,
+        borderColor: '#252525',
+        borderWidth: 2,
     },
 });
