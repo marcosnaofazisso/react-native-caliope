@@ -28,11 +28,11 @@ export default function Caliope({ navigation }) {
 
     const [mensagem, setMensagem] = useState({})
     const [resposta, setResposta] = useState([{}])
-    const [conversa, setConversa] = useState([])
+    const [conversa, setConversa] = useState([{ mensagem: 'Oi, eu sou Calíope. 🥰', mensagemDoUsuario: false, imagem: false }])
 
-    const [boasVindas] = useState("Oi, eu sou Calíope. 🥰")
     const [mostrarBoasVindas, setMostrarBoasVindas] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
+
 
     useEffect(() => {
         const destroyAudio = async () => {
@@ -45,6 +45,15 @@ export default function Caliope({ navigation }) {
         destroyAudio()
         return () => {
             Voice.destroy().then(Voice.removeAllListeners);
+        }
+    }, [])
+
+    useEffect(() => {
+        if (user.nome) {
+            setConversa([
+                { mensagem: 'Oi, eu sou Calíope. 🥰', mensagemDoUsuario: false, imagem: false },
+                { mensagem: `Te desejo boas vindas, ${user.nome}. Como posso te ajudar?`, mensagemDoUsuario: false, imagem: false },
+            ])
         }
     }, [])
 
@@ -145,14 +154,15 @@ export default function Caliope({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 {isLoading && <ActivityIndicator color="tomato" size='large' animating={isLoading} />}
-                {!isLoading && mostrarBoasVindas && <Conversation tipo={false}>{boasVindas}</Conversation>}
-                {!isLoading && mostrarBoasVindas && (Object.keys(user).length != 0) && <Conversation tipo={false}>{`Te desejo boas vindas, ${user.nome}. Como posso te ajudar?`}</Conversation>}
-                <FlatList
-                    data={conversa}
-                    keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
-                    renderItem={({ item, index }) => (
-                        <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index}>{item.mensagem}</Conversation>
-                    )} />
+                {!isLoading &&
+                    <FlatList
+                        data={conversa}
+                        keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
+                        renderItem={({ item, index }) => (
+                            <View>
+                                <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index}>{item.mensagem}</Conversation>
+                            </View>
+                        )} />}
 
                 <View style={styles.textInput}>
                     <TextInput

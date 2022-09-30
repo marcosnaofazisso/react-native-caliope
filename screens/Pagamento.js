@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, Button, FlatList } from "react-native";
 
 import { UsuarioContext } from "../context/usuario-context";
 import { CarrinhoContext } from "../context/carrinho-context";
 
 
-export default function Pagamento({ navigation, route }) {
+export default function Pagamento({ navigation }) {
 
     const { user } = useContext(UsuarioContext)
-    const { limparItemsDoCarrinho } = useContext(CarrinhoContext);
+    const { listaCarrinho, limparItemsDoCarrinho } = useContext(CarrinhoContext);
 
-    const pedidoCompleto = route.params.pedido;
+    const [cupomDesconto, setCupomDesconto] = useState('')
 
-    let totalPedido = pedidoCompleto.reduce((prev, current) => {
+    let totalPedido = listaCarrinho.reduce((prev, current) => {
         return prev + +current.price
     }, 0);
 
@@ -25,7 +25,7 @@ export default function Pagamento({ navigation, route }) {
         <View style={styles.container}>
             <Text style={styles.title}>Detalhes do Pedido</Text>
             <Text></Text>
-            {pedidoCompleto.map((item) => {
+            {listaCarrinho.map((item) => {
                 return (
                     <View key={item.id} style={styles.containerItemPrice}>
                         <Text>1 x {item.title}</Text>
@@ -40,7 +40,16 @@ export default function Pagamento({ navigation, route }) {
             <Text></Text>
             {(Object.keys(user).length != 0) &&
                 <View>
-                    <Text>Você receberá as informações de pagamento pelo email: {user.email} combinado?</Text>
+                    <Text style={styles.titleCupomDesconto}>Cupom de Desconto</Text>
+                    <TextInput
+                        style={styles.inputCupomDesconto}
+                        placeholder="Digite aqui seu Cupom de Desconto"
+                        value={cupomDesconto}
+                        onChangeText={(cupom) => setCupomDesconto(cupom)}
+                    />
+                    <Text></Text>
+                    <Text>Você receberá as informações de pagamento pelo email: <Text style={styles.userEmail}>{user.email}</Text>, combinado?</Text>
+                    <Text></Text>
                     <TouchableOpacity style={styles.button} onPress={() => finalizarPedido()}>
                         <Text style={styles.buttonTxt}>Entendido</Text>
                     </TouchableOpacity>
@@ -49,6 +58,7 @@ export default function Pagamento({ navigation, route }) {
             {(Object.keys(user).length == 0) &&
                 <View>
                     <Text>Cadastre-se ou faça um login para finalizar sua compra.</Text>
+                    <Text></Text>
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Menu")}>
                         <Text style={styles.buttonTxt}>Fazer Login / Cadastro</Text>
                     </TouchableOpacity>
@@ -72,12 +82,25 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: 'bold',
     },
+    titleCupomDesconto: {
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
+    userEmail: {
+        fontWeight: 'bold',
+    },
     button: {
         backgroundColor: "black",
         alignSelf: "flex-start",
         padding: 4,
         marginLeft: 10,
         borderRadius: 5,
+    },
+    inputCupomDesconto: {
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 3,
+        padding: 12,
     },
     buttonTxt: {
         color: "white",
