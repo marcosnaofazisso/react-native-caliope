@@ -298,9 +298,9 @@ const styles = StyleSheet.create({
 
     },
     menuContainer: {
-        // paddingHorizontal: 16,
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: "white",
+        paddingTop:0,
     },
 });

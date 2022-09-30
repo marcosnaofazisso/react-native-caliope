@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
         paddingRight: 15,
     },
     View:{
-        marginTop: 20,
+        marginTop: 5,
         flexDirection: "row",
     },
     ViewSetSenha:{
