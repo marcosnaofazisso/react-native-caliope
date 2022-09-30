@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from "react-native";
 
 import { apiUsuario } from '../api'
@@ -35,8 +35,8 @@ export default function Cadastro({ navigation, route }) {
 
     return (
         <View >
-            <Text>Cadastro</Text>
             <View style={styles.inputContainer}>
+                <Text style={styles.title}>Insira seus dados</Text>
                 <TextInput style={styles.input}
                     placeholder="Nome"
                     value={nome}
@@ -87,13 +87,20 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 15,
+        marginTop: 10,
         fontWeight: 'bold',
     },
     inputContainer: {
         backgroundColor: "#FAF8F8",
         // fontFamily: "Roboto",
+        paddingHorizontal: 20,
+    },
+    input: {
+        backgroundColor: "#FAF8F8",
         paddingTop: 20,
         paddingHorizontal: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#000',
     },
     buttonContainer: {
         flexGrow: 1,
@@ -101,6 +108,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 20,
+        marginBottom: 15,
     },
     button: {
         backgroundColor: "black",
