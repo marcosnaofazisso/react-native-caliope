@@ -6,8 +6,6 @@ import {
     View,
     FlatList,
     TouchableOpacity,
-    StatusBar,
-    Button
 } from "react-native";
 
 

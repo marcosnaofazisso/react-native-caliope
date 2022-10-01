@@ -311,16 +311,16 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     carrinho: {
-        width: 30,
-        height: 30,
-        marginLeft: 230,
-        marginTop: 10,
+        width: 20,
+        height: 20,
+        marginLeft: 240,
+        marginTop: 8,
     },
     avatar: {
         marginLeft: 20,
         marginTop: 8,
-        width: 50,
-        height: 50,
+        width: 42,
+        height: 42,
         borderRadius: 40
 
     },
