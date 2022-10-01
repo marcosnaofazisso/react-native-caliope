@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Pressable, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-import api from './api';
+import api from '../api';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
