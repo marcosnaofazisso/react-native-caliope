@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAF8F8",
     paddingRight: 5,
     paddingLeft: 5,
-    // fontFamily: "Roboto",
   },
   button: {
     backgroundColor: "black",

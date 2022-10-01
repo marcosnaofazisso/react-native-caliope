@@ -5,7 +5,7 @@ import { Text, View, StyleSheet} from "react-native";
 export default function Pedido(props) {
 
     const item = props;
-
+    
     return (
         <View style={styles.item}>
             <Text style={styles.text}>Pedido nº: {item.numeroPedido}</Text>
@@ -17,9 +17,7 @@ export default function Pedido(props) {
 
 }
 
-
 const styles = StyleSheet.create({
-
     item: {
         backgroundColor: '#f1f1f1',
         padding: 20,

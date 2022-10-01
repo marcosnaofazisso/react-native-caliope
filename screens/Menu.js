@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
     ViewMenu: {
         width: "100%",
         textAlign: "left",
+        paddingLeft: 10,
     },
     textStyle: {
         fontSize: 16,
@@ -284,6 +285,7 @@ const styles = StyleSheet.create({
     },
     View: {
         marginTop: 5,
+        paddingRight: 10,
         flexDirection: "row",
     },
     ViewSetSenha: {

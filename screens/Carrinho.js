@@ -113,7 +113,6 @@ const styles = StyleSheet.create({
         minWidth: '100%',
         height: '100%',
         backgroundColor: "#FAF8F8",
-        // fontFamily: "Roboto",
     },
     containerBtn: {
         flex: 1,
@@ -163,7 +162,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff0066',
         alignSelf: 'center',
         bottom: 120,
-        // right: 20,
 
     }
 });

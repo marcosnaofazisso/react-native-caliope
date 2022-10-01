@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Pressable, StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
+import { StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, FlatList, Image, ActivityIndicator } from 'react-native';
 
 import Conversation from './Conversation';
 
@@ -253,7 +253,10 @@ const styles = StyleSheet.create({
         paddingTop: 15, // original value: not existed
         paddingRight: 90, //original value: 15
         paddingLeft: 15, //original value: 10
-        paddingBottom: 15,
+        paddingBottom: 25,
+        position: 'absolute',
+        top: 'auto',
+        bottom: 0,
     },
     input: {
         flex: 6,
@@ -312,13 +315,15 @@ const styles = StyleSheet.create({
         height: 35,
     },
     clearField: {
-        alignItems: "center",
-        backgroundColor: "#F5F5F5",
-
+        position: 'absolute',
+        top: 'auto',
+        bottom: -2,
+        right:20,
     },
     clearChat: {
         fontWeight: 'bold',
-        marginBottom: 15,
+        marginBottom: 5,
+        marginTop:'auto'
     },
     menuBar: {
         width: 38,
