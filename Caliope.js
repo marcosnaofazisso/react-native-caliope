@@ -224,7 +224,6 @@ export default function Caliope({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingRight: 5,
         paddingLeft: 5,
         backgroundColor: "#fff",
     },
@@ -310,7 +309,7 @@ const styles = StyleSheet.create({
     },
     listenIcon: {
         color: 'black',
-        marginRight: 3,
+        marginRight: 10,
         width: 35,
         height: 35,
     },

@@ -11,7 +11,7 @@ export default function Pedido(props) {
             <Text style={styles.text}>Pedido nº: {item.numeroPedido}</Text>
             <Text style={styles.text}>Data: {item.dataPedido}</Text>
             <Text style={styles.text}>Qtd de Items: {item.totalItems}</Text>
-            <Text style={styles.text}>Total: {item.valorTotal}</Text>
+            <Text style={styles.text}>Total: R${item.valorTotal}</Text>
         </View>
     );
 
