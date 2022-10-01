@@ -17,10 +17,18 @@ import { UsuarioContext } from './context/usuario-context';
 import { fotosDosUsuariosTeste } from './data/fotosUsuarios';
 
 
+
+import { CarrinhoContext } from './context/carrinho-context';
+import { inventario, carrinho } from "./data/data";
+
+
 export default function Caliope({ navigation }) {
 
 
     const { user } = useContext(UsuarioContext)
+    const { addItemAoCarrinho } = useContext(CarrinhoContext);
+
+    const [listaInventario] = useState(inventario);
 
     const [sessionId, setSessionId] = useState('')
     const [audioEnviado, setAudioEnviado] = useState(false)
@@ -66,10 +74,12 @@ export default function Caliope({ navigation }) {
             }
         })
             .then(response => {
-
                 setConversa((conversa) => [...conversa, mensagem])
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
+                        if (element.text == 'Item adicionado ao carrinho! Para finalizar a compra, acesse o carrinho pelo aplicativo, tudo bem? ') {
+                            adicionarItemAoCarrinho()
+                        }
                         setResposta((resposta) => [...resposta, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
                         setConversa((conversa) => [...conversa, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
                     } else {
@@ -80,6 +90,13 @@ export default function Caliope({ navigation }) {
             }).then(setMensagem({}))
             .catch(error => console.log(error))
     }
+
+    const adicionarItemAoCarrinho = () => {
+        addItemAoCarrinho(listaInventario[2])
+
+    }
+
+
 
     const ouvirResposta = () => {
         if (resposta.length <= 1) ToastAndroid.show("Áudio indisponível. Mande uma mensagem para começar...", ToastAndroid.SHORT);

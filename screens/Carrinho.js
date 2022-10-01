@@ -41,17 +41,6 @@ export default function Carrinho({ navigation }) {
 
     function limparCarrinho() {
         limparItemsDoCarrinho()
-        // listaCarrinho.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
-        //     var index = listaCarrinho
-        //         .map((x) => {
-        //             return x.id;
-        //         })
-        //         .indexOf(itemDoCarrinho.id);
-        //     listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
-
-        // });
-        // const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
-        // setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
     }
 
     const [visible, setVisible] = useState(false)
@@ -67,20 +56,17 @@ export default function Carrinho({ navigation }) {
         }).start(() => to === 0 && setVisible(false));
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            console.log("Abrindo modal...");
-            resizeBox(1)
-        }, 1500)
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         console.log("Abrindo modal...");
+    //         resizeBox(1)
+    //     }, 1500)
 
-        setTimeout(() => {
-            console.log("Fechando modal...");
-            resizeBox(0);
-        }, 6000)
-    }, [])
-
-
-
+    //     setTimeout(() => {
+    //         console.log("Fechando modal...");
+    //         resizeBox(0);
+    //     }, 6000)
+    // }, [])
 
 
     return (
