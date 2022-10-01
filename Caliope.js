@@ -175,7 +175,7 @@ export default function Caliope({ navigation }) {
                 </View>
                 {isLoading && <ActivityIndicator color="tomato" size='large' animating={isLoading} />}
                 {!isLoading &&
-                    <FlatList
+                    <FlatList 
                         data={conversa}
                         keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
                         renderItem={({ item, index }) => (
@@ -253,9 +253,10 @@ const styles = StyleSheet.create({
         paddingRight: 90, //original value: 15
         paddingLeft: 15, //original value: 10
         paddingBottom: 25,
-        position: 'absolute',
-        top: 'auto',
-        bottom: 0,
+        // position: 'absolute',
+        // top: 'auto',
+        // bottom: 0,
+        //linhas usadas pra fixed o input mas  perde o scroll
     },
     input: {
         flex: 6,

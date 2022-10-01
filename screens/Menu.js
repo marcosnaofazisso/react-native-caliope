@@ -208,7 +208,7 @@ export default function Menu({ navigation }) {
                         ) : (
                             <Text>Nenhum item encontrado 😔</Text>
                         )}
-                        <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center' }}>
+                        <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center', marginBottom:10, }}>
                             <Text>Cancelar</Text>
                         </TouchableOpacity>
                     </View>}
