@@ -77,7 +77,7 @@ export default function Caliope({ navigation }) {
                 setConversa((conversa) => [...conversa, mensagem])
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
-                        if (element.text == 'Item adicionado ao carrinho! Para finalizar a compra, acesse o carrinho pelo aplicativo, tudo bem? ') {
+                        if (element.text == 'Item adicionado ao carrinho! Para finalizar a compra, acesse o carrinho pelo aplicativo, tudo bem?') {
                             adicionarItemAoCarrinho()
                         }
                         setResposta((resposta) => [...resposta, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
@@ -92,6 +92,7 @@ export default function Caliope({ navigation }) {
     }
 
     const adicionarItemAoCarrinho = () => {
+        console.log("Adicionando item ao carrinho...")
         addItemAoCarrinho(listaInventario[2])
 
     }
@@ -175,7 +176,7 @@ export default function Caliope({ navigation }) {
                 </View>
                 {isLoading && <ActivityIndicator color="tomato" size='large' animating={isLoading} />}
                 {!isLoading &&
-                    <FlatList 
+                    <FlatList
                         data={conversa}
                         keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
                         renderItem={({ item, index }) => (
@@ -183,6 +184,13 @@ export default function Caliope({ navigation }) {
                                 <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index}>{item.mensagem}</Conversation>
                             </View>
                         )} />}
+
+                {conversa.length > 1 ?
+                    <View style={styles.clearField}>
+                        <TouchableOpacity onPress={limparConversa}>
+                            <Text style={styles.clearChat}>Limpar conversa</Text>
+                        </TouchableOpacity>
+                    </View> : null}
 
                 <View style={styles.textInput}>
                     <TextInput
@@ -207,12 +215,6 @@ export default function Caliope({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {conversa.length > 1 ?
-                    <View style={styles.clearField}>
-                        <TouchableOpacity onPress={limparConversa}>
-                            <Text style={styles.clearChat}>Limpar conversa</Text>
-                        </TouchableOpacity>
-                    </View> : null}
             </View>
             <View>
             </View>
@@ -224,7 +226,6 @@ export default function Caliope({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingLeft: 5,
         backgroundColor: "#fff",
     },
     conversation: {
@@ -251,8 +252,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#F5F5F5",
         paddingTop: 15, // original value: not existed
         paddingRight: 90, //original value: 15
-        paddingLeft: 15, //original value: 10
-        paddingBottom: 25,
+        paddingBottom: 20,
+        paddingLeft: 10,
         // position: 'absolute',
         // top: 'auto',
         // bottom: 0,
@@ -260,7 +261,6 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 6,
-        height: "auto",
         borderBottomColor: "gray",
         borderWidth: 1,
         borderRadius: 10,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     },
     microphoneIcon: {
         color: 'black',
-        marginLeft: 10,
+        marginLeft: 5,
         marginRight: 10,
         width: 35,
         height: 35,
@@ -315,15 +315,13 @@ const styles = StyleSheet.create({
         height: 35,
     },
     clearField: {
-        position: 'absolute',
-        top: 'auto',
-        bottom: -2,
-        right:20,
+        margin: 0,
+        alignItems: 'center',
+        backgroundColor: "#F5F5F5",
     },
     clearChat: {
         fontWeight: 'bold',
-        marginBottom: 5,
-        marginTop:'auto'
+        paddingTop: 10,
     },
     menuBar: {
         width: 38,

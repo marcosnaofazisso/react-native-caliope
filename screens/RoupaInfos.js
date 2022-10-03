@@ -1,7 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import React, { useContext, useEffect } from "react";
 
-import BotaoChat from "../components/BotaoChat";
 import RoupaInfo from "../components/RoupaInfo";
 
 export default function RoupaInfos({ navigation, route }) {
@@ -24,7 +23,6 @@ export default function RoupaInfos({ navigation, route }) {
     <View style={styles.container}>
       <Text style={styles.info}>Informações do Produto</Text>
       <RoupaInfo {...produtoSelecionado} onPress={onPressNavigation} />
-      <BotaoChat navigation={() => navigation.navigate("Caliope")} />
     </View>
   );
 }

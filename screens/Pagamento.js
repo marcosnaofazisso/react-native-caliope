@@ -51,7 +51,7 @@ export default function Pagamento({ navigation }) {
                     <Text>Você receberá as informações de pagamento pelo email: <Text style={styles.userEmail}>{user.email}</Text>, combinado?</Text>
                     <Text></Text>
                     <TouchableOpacity style={styles.button} onPress={() => finalizarPedido()}>
-                        <Text style={styles.buttonTxt}>Entendido</Text>
+                        <Text style={styles.buttonTxt}>Confirmar Pedido</Text>
                     </TouchableOpacity>
                 </View>
             }

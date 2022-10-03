@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, Modal, Animated, Easing, SafeAreaView } from "react-native";
 
-import BotaoChat from "../components/BotaoChat";
 import RoupaInfos from "../components/RoupaInfo";
 
 import { CarrinhoContext } from "../context/carrinho-context";
@@ -72,6 +71,7 @@ export default function Carrinho({ navigation }) {
     return (
         <View style={styles.container}>
 
+            {/* Essa aqui seria a mensagem vinda da Calíope para oferecer frete grátis */}
 
             {/* <Modal transparent visible={visible}>
                 <SafeAreaView style={{ flex: 1 }} onTouchStart={() => navigation.navigate('Caliope')}>
@@ -83,7 +83,7 @@ export default function Carrinho({ navigation }) {
             </Modal> */}
 
 
-            <Text style={styles.info}>Produtos do Carrinho</Text>
+            <Text style={styles.info}>Carrinho</Text>
             {listaCarrinho.length > 0 ?
                 <View style={styles.containerBtn}>
                     <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
@@ -93,14 +93,12 @@ export default function Carrinho({ navigation }) {
                         <Text style={styles.buttonTxt}>Finalizar Pedido</Text>
                     </TouchableOpacity>
                 </View>
-                : null}
+                : <Text style={styles.emptyCar}>Seu carrinho está vazio 😔</Text>}
             <FlatList
                 data={listaCarrinho}
                 keyExtractor={(item) => item.id}
                 renderItem={renderRoupa}
             />
-
-            <BotaoChat navigation={() => navigation.navigate("Caliope")} />
         </View>
     );
 }
@@ -163,5 +161,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         bottom: 120,
 
+    },
+    emptyCar: {
+        marginTop: 20,
+        alignSelf: 'center',
     }
 });
