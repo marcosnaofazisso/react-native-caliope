@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, FlatList, SafeAreaView, Image, Alert, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, ToastAndroid, ActivityIndicator, FlatList, SafeAreaView, Image, Alert, TextInput } from "react-native";
 
 import Pedido from "./Pedido";
 
@@ -21,7 +21,9 @@ export default function Menu({ navigation }) {
 
     const [verPedidos, setVerPedidos] = useState(false);
     const [listaDeUsuarios, setListaDeUsuarios] = useState([]);
+
     const [renderizarPagina, setRenderizarPagina] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
 
     const [recoverPassword, setRecoverPassword] = useState(false);
@@ -46,6 +48,7 @@ export default function Menu({ navigation }) {
 
     }
     function deslogarContaTeste() {
+        console.log("Deslogando usuario....")
         setRecoverPassword(false)
         setVerPedidos(false)
         signOut()
@@ -70,7 +73,7 @@ export default function Menu({ navigation }) {
     }
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (!isLoggedIn && isLoading) {
             const getAllUsuarios = async () => {
                 const response = await apiUsuario.get('/usuario')
                 setListaDeUsuarios(response.data)
@@ -79,10 +82,12 @@ export default function Menu({ navigation }) {
             }
             getAllUsuarios()
         }
+        setIsLoading(false)
     }, [])
 
     useEffect(() => {
-        console.log("Recarregando...", renderizarPagina)
+        console.log("Recarregando...")
+        console.log("Existe usuário logado? =>", isLoggedIn)
         setRenderizarPagina(current => !current)
     }, [isLoggedIn])
 
@@ -172,69 +177,77 @@ export default function Menu({ navigation }) {
     )
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-            {!isLoggedIn &&
-                (<View style={styles.container}>
-                    <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[email] ? fotosDosUsuariosTeste[email] : fotosDosUsuariosTeste['avatarPadrao']} />
-                </View>)}
-            {isLoggedIn &&
-                <View style={styles.container}>
-                    <Image style={styles.imagemAvatar}
-                        source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
+        <>
+            {isLoading ? <SafeAreaView style={styles.safeArea}>
+                <ActivityIndicator color="tomato" size='large' animating={isLoading} />
+            </SafeAreaView>
+                :
+                <SafeAreaView style={styles.safeArea}>
 
-                    <PerfilUsuario />
+                    {isLoggedIn ?
+                        <View style={styles.container}>
+                            <Image style={styles.imagemAvatar}
+                                source={fotosDosUsuariosTeste[user.email] ? fotosDosUsuariosTeste[user.email] : fotosDosUsuariosTeste['avatarPadrao']} />
 
-                </View>}
+                            <PerfilUsuario />
 
-            {verPedidos && <View style={styles.pedidosContainer}>
-                <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10, alignSelf: 'center' }}>Meus Pedidos</Text>
-                {!user.pedidos.empty ? (
-                    <FlatList
-                        data={user.pedidos}
-                        keyExtractor={(item) => item.id}
-                        renderItem={renderPedido}
-                    />
-                ) : (
-                    <Text>Nenhum item encontrado 😔</Text>
-                )}
-                <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center' }}>
-                    <Text>Cancelar</Text>
-                </TouchableOpacity>
-            </View>}
-            {!isLoggedIn &&
-                <View style={styles.inputContainer}>
-                    <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>
-                    <TextInput style={styles.input}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={(email) => setEmail(email)}
-                    />
-                    <TextInput style={styles.input}
-                        secureTextEntry
-                        placeholder="Senha"
-                        value={password}
-                        onChangeText={(senha) => setPassword(senha)}
-                    />
-                    <TouchableOpacity onPress={() => navigation.navigate("Cadastro")} style={{ alignSelf: 'center', marginTop: 15 }}>
-                        <Text>Criar um Cadastro</Text>
-                    </TouchableOpacity>
+                        </View>
+                        :
+                        <View style={styles.container}>
+                            <Image style={styles.imagemAvatar} source={fotosDosUsuariosTeste[email] ? fotosDosUsuariosTeste[email] : fotosDosUsuariosTeste['avatarPadrao']} />
+                        </View>}
 
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-                            <Text style={styles.buttonTxt}>Cancelar</Text>
+                    {verPedidos && <View style={styles.pedidosContainer}>
+                        <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10, alignSelf: 'center' }}>Meus Pedidos</Text>
+                        {!user.pedidos.empty ? (
+                            <FlatList
+                                data={user.pedidos}
+                                keyExtractor={(item) => item.id}
+                                renderItem={renderPedido}
+                            />
+                        ) : (
+                            <Text>Nenhum item encontrado 😔</Text>
+                        )}
+                        <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center', marginBottom: 10, }}>
+                            <Text>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => logarContaTeste()}>
-                            <Text style={styles.buttonTxt}>Entrar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>}
-        </SafeAreaView>
+                    </View>}
+                    {!isLoggedIn &&
+                        <View style={styles.inputContainer}>
+                            <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>
+                            <TextInput style={styles.input}
+                                placeholder="Email"
+                                value={email}
+                                onChangeText={(email) => setEmail(email)}
+                            />
+                            <TextInput style={styles.input}
+                                secureTextEntry
+                                placeholder="Senha"
+                                value={password}
+                                onChangeText={(senha) => setPassword(senha)}
+                            />
+                            <TouchableOpacity onPress={() => navigation.navigate("Cadastro")} style={{ alignSelf: 'center', marginTop: 15 }}>
+                                <Text>Criar um Cadastro</Text>
+                            </TouchableOpacity>
+
+                            <View style={styles.buttonContainer}>
+                                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+                                    <Text style={styles.buttonTxt}>Cancelar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} onPress={() => logarContaTeste()}>
+                                    <Text style={styles.buttonTxt}>Entrar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>}
+                </SafeAreaView>}
+        </>
     )
 }
 const styles = StyleSheet.create({
     ViewMenu: {
         width: "100%",
         textAlign: "left",
+        paddingLeft: 10,
     },
     textStyle: {
         fontSize: 16,
@@ -272,6 +285,7 @@ const styles = StyleSheet.create({
     },
     View: {
         marginTop: 5,
+        paddingRight: 10,
         flexDirection: "row",
     },
     ViewSetSenha: {

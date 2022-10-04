@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Button, FlatList, Modal, Animated, Easing, SafeAreaView } from "react-native";
 
-import BotaoChat from "../components/BotaoChat";
 import RoupaInfos from "../components/RoupaInfo";
 
 import { CarrinhoContext } from "../context/carrinho-context";
@@ -41,17 +40,6 @@ export default function Carrinho({ navigation }) {
 
     function limparCarrinho() {
         limparItemsDoCarrinho()
-        // listaCarrinho.forEach((itemDoCarrinho) => {  // cada item que está no carrinho, passamos para inventário
-        //     var index = listaCarrinho
-        //         .map((x) => {
-        //             return x.id;
-        //         })
-        //         .indexOf(itemDoCarrinho.id);
-        //     listaInventario.splice(itemDoCarrinho.id - 1, 0, listaCarrinho[index]);
-
-        // });
-        // const filterData2 = listaCarrinho.splice(0, listaCarrinho.length); //limpa o carrinho
-        // setListaCarrinho({ listaCarrinho: filterData2 }); //seta o carrinho
     }
 
     const [visible, setVisible] = useState(false)
@@ -67,25 +55,23 @@ export default function Carrinho({ navigation }) {
         }).start(() => to === 0 && setVisible(false));
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            console.log("Abrindo modal...");
-            resizeBox(1)
-        }, 1500)
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         console.log("Abrindo modal...");
+    //         resizeBox(1)
+    //     }, 1500)
 
-        setTimeout(() => {
-            console.log("Fechando modal...");
-            resizeBox(0);
-        }, 6000)
-    }, [])
-
-
-
+    //     setTimeout(() => {
+    //         console.log("Fechando modal...");
+    //         resizeBox(0);
+    //     }, 6000)
+    // }, [])
 
 
     return (
         <View style={styles.container}>
 
+            {/* Essa aqui seria a mensagem vinda da Calíope para oferecer frete grátis */}
 
             {/* <Modal transparent visible={visible}>
                 <SafeAreaView style={{ flex: 1 }} onTouchStart={() => navigation.navigate('Caliope')}>
@@ -97,7 +83,7 @@ export default function Carrinho({ navigation }) {
             </Modal> */}
 
 
-            <Text style={styles.info}>Produtos do Carrinho</Text>
+            <Text style={styles.info}>Carrinho</Text>
             {listaCarrinho.length > 0 ?
                 <View style={styles.containerBtn}>
                     <TouchableOpacity style={styles.button} onPress={() => limparCarrinho()}>
@@ -107,14 +93,12 @@ export default function Carrinho({ navigation }) {
                         <Text style={styles.buttonTxt}>Finalizar Pedido</Text>
                     </TouchableOpacity>
                 </View>
-                : null}
+                : <Text style={styles.emptyCar}>Seu carrinho está vazio 😔</Text>}
             <FlatList
                 data={listaCarrinho}
                 keyExtractor={(item) => item.id}
                 renderItem={renderRoupa}
             />
-
-            <BotaoChat navigation={() => navigation.navigate("Caliope")} />
         </View>
     );
 }
@@ -127,7 +111,6 @@ const styles = StyleSheet.create({
         minWidth: '100%',
         height: '100%',
         backgroundColor: "#FAF8F8",
-        // fontFamily: "Roboto",
     },
     containerBtn: {
         flex: 1,
@@ -177,7 +160,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff0066',
         alignSelf: 'center',
         bottom: 120,
-        // right: 20,
 
+    },
+    emptyCar: {
+        marginTop: 20,
+        alignSelf: 'center',
     }
 });

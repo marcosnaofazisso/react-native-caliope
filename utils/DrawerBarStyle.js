@@ -31,9 +31,6 @@ export const drawerOptionsLoja = (navigation) => {
 
         },
         drawerLabel: "Home",
-        // drawerItemStyle: {
-        //   height: height,
-        // },
     };
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Pressable, StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, ScrollView, FlatList, Image, ActivityIndicator } from 'react-native';
+import { StatusBar, StyleSheet, Text, ToastAndroid, View, TouchableOpacity, TextInput, FlatList, Image, ActivityIndicator } from 'react-native';
 
 import Conversation from './Conversation';
 
@@ -17,10 +17,18 @@ import { UsuarioContext } from './context/usuario-context';
 import { fotosDosUsuariosTeste } from './data/fotosUsuarios';
 
 
+
+import { CarrinhoContext } from './context/carrinho-context';
+import { inventario, carrinho } from "./data/data";
+
+
 export default function Caliope({ navigation }) {
 
 
     const { user } = useContext(UsuarioContext)
+    const { addItemAoCarrinho } = useContext(CarrinhoContext);
+
+    const [listaInventario] = useState(inventario);
 
     const [sessionId, setSessionId] = useState('')
     const [audioEnviado, setAudioEnviado] = useState(false)
@@ -66,10 +74,18 @@ export default function Caliope({ navigation }) {
             }
         })
             .then(response => {
-
                 setConversa((conversa) => [...conversa, mensagem])
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
+                        if (element.text == 'Item adicionado ao carrinho!') {
+                            adicionarItemAoCarrinho()
+                        }
+                        if (element.text == 'Novo item adicionado ao carrinho!') {
+                            adicionarItemAoCarrinho()
+                        }
+                        if (element.text == 'Vou chamar alguém que possa ajudar você agora,  por favor aguarde.') {
+                            chamandoAtendenteHumano()
+                        }
                         setResposta((resposta) => [...resposta, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
                         setConversa((conversa) => [...conversa, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
                     } else {
@@ -80,6 +96,23 @@ export default function Caliope({ navigation }) {
             }).then(setMensagem({}))
             .catch(error => console.log(error))
     }
+
+    const adicionarItemAoCarrinho = () => {
+        console.log("Adicionando item ao carrinho...")
+        addItemAoCarrinho(listaInventario[2])
+
+    }
+
+    const chamandoAtendenteHumano = () => {
+        console.log("Chamando um atendente humano...");
+        setTimeout(() => {
+            console.log("Aguarde...");
+            setConversa((conversa) => [...conversa, { mensagem: 'Olá sou Beatriz Albuquerque, analista de experiência da Loja de Roupa. Em que posso ajudar?', mensagemDoUsuario: false, imagem: false }])
+        }, 5000)
+
+    }
+
+
 
     const ouvirResposta = () => {
         if (resposta.length <= 1) ToastAndroid.show("Áudio indisponível. Mande uma mensagem para começar...", ToastAndroid.SHORT);
@@ -167,6 +200,13 @@ export default function Caliope({ navigation }) {
                             </View>
                         )} />}
 
+                {conversa.length > 1 ?
+                    <View style={styles.clearField}>
+                        <TouchableOpacity onPress={limparConversa}>
+                            <Text style={styles.clearChat}>Limpar conversa</Text>
+                        </TouchableOpacity>
+                    </View> : null}
+
                 <View style={styles.textInput}>
                     <TextInput
                         style={styles.input}
@@ -190,12 +230,6 @@ export default function Caliope({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {conversa.length > 1 ?
-                    <View style={styles.clearField}>
-                        <TouchableOpacity onPress={limparConversa}>
-                            <Text style={styles.clearChat}>Limpar conversa</Text>
-                        </TouchableOpacity>
-                    </View> : null}
             </View>
             <View>
             </View>
@@ -207,8 +241,6 @@ export default function Caliope({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingRight: 5,
-        paddingLeft: 5,
         backgroundColor: "#fff",
     },
     conversation: {
@@ -235,12 +267,15 @@ const styles = StyleSheet.create({
         backgroundColor: "#F5F5F5",
         paddingTop: 15, // original value: not existed
         paddingRight: 90, //original value: 15
-        paddingLeft: 15, //original value: 10
-        paddingBottom: 15,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        // position: 'absolute',
+        // top: 'auto',
+        // bottom: 0,
+        //linhas usadas pra fixed o input mas  perde o scroll
     },
     input: {
         flex: 6,
-        height: "auto",
         borderBottomColor: "gray",
         borderWidth: 1,
         borderRadius: 10,
@@ -277,7 +312,7 @@ const styles = StyleSheet.create({
     },
     microphoneIcon: {
         color: 'black',
-        marginLeft: 10,
+        marginLeft: 5,
         marginRight: 10,
         width: 35,
         height: 35,
@@ -290,18 +325,18 @@ const styles = StyleSheet.create({
     },
     listenIcon: {
         color: 'black',
-        marginRight: 3,
+        marginRight: 10,
         width: 35,
         height: 35,
     },
     clearField: {
-        alignItems: "center",
+        margin: 0,
+        alignItems: 'center',
         backgroundColor: "#F5F5F5",
-
     },
     clearChat: {
         fontWeight: 'bold',
-        marginBottom: 15,
+        paddingTop: 10,
     },
     menuBar: {
         width: 38,
