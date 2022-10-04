@@ -77,8 +77,14 @@ export default function Caliope({ navigation }) {
                 setConversa((conversa) => [...conversa, mensagem])
                 response.data.output.generic.forEach((element, index) => {
                     if (!element.source) {
-                        if (element.text == 'Item adicionado ao carrinho! Para finalizar a compra, acesse o carrinho pelo aplicativo, tudo bem?') {
+                        if (element.text == 'Item adicionado ao carrinho!') {
                             adicionarItemAoCarrinho()
+                        }
+                        if (element.text == 'Novo item adicionado ao carrinho!') {
+                            adicionarItemAoCarrinho()
+                        }
+                        if (element.text == 'Vou chamar alguém que possa ajudar você agora,  por favor aguarde.') {
+                            chamandoAtendenteHumano()
                         }
                         setResposta((resposta) => [...resposta, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
                         setConversa((conversa) => [...conversa, { mensagem: element.text, mensagemDoUsuario: false, imagem: false }])
@@ -94,6 +100,15 @@ export default function Caliope({ navigation }) {
     const adicionarItemAoCarrinho = () => {
         console.log("Adicionando item ao carrinho...")
         addItemAoCarrinho(listaInventario[2])
+
+    }
+
+    const chamandoAtendenteHumano = () => {
+        console.log("Chamando um atendente humano...");
+        setTimeout(() => {
+            console.log("Aguarde...");
+            setConversa((conversa) => [...conversa, { mensagem: 'Olá sou Beatriz Albuquerque, analista de experiência da Loja de Roupa. Em que posso ajudar?', mensagemDoUsuario: false, imagem: false }])
+        }, 5000)
 
     }
 

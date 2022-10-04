@@ -15,7 +15,7 @@ export default function Menu({ navigation }) {
 
     const { user, isLoggedIn, signIn, signOut } = useContext(UsuarioContext)
 
-    const [email, setEmail] = useState("bruno@caliope.com.br");
+    const [email, setEmail] = useState("cristine@caliope.com.br");
     const [password, setPassword] = useState("123456789");
 
 
@@ -208,7 +208,7 @@ export default function Menu({ navigation }) {
                         ) : (
                             <Text>Nenhum item encontrado 😔</Text>
                         )}
-                        <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center', marginBottom:10, }}>
+                        <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center', marginBottom: 10, }}>
                             <Text>Cancelar</Text>
                         </TouchableOpacity>
                     </View>}
