@@ -214,7 +214,7 @@ export default function Menu({ navigation }) {
                     </View>}
                     {!isLoggedIn &&
                         <View style={styles.inputContainer}>
-                            <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Entre ou faça um cadastro</Text>
+                            <Text style={{ fontWeight: 'bold', alignSelf: 'center', backgroundColor: "#FAF8F8" }}>Entre ou faça um cadastro</Text>
                             <TextInput style={styles.input}
                                 placeholder="Email"
                                 value={email}
@@ -249,6 +249,33 @@ const styles = StyleSheet.create({
         textAlign: "left",
         paddingLeft: 10,
     },
+    safeArea: {
+        flex: 2,
+        // height: "auto",
+        // overflowy: "auto",
+        width: "100%",
+        backgroundColor: "#FAF8F8",
+    },
+    container: {
+        flex: 2,
+        width: "100%",
+        backgroundColor: "#FAF8F8",
+        fontFamily: "Roboto",
+        alignItems: 'center',
+        paddingTop: 20,
+    },
+    inputContainer: {
+        backgroundColor: "#FAF8F8",
+        marginTop: 120,
+        paddingHorizontal: 20,
+    },
+    imagemAvatar: {
+        height: 100,
+        width: 100,
+        borderRadius: 100 / 2,
+        borderColor: '#252525',
+        borderWidth: 2,
+    },
     textStyle: {
         fontSize: 16,
         color: "#212121",
@@ -260,20 +287,6 @@ const styles = StyleSheet.create({
         marginBottom: 2,
         fontWeight: "bold",
         textDecorationL: "overline",
-    },
-    container: {
-        flex: 2,
-        width: "100%",
-        backgroundColor: "#FAF8F8",
-        fontFamily: "Roboto",
-        alignItems: 'center',
-        paddingTop: 20,
-    },
-    safeArea: {
-        flex: 2,
-        height: "auto",
-        overflowy: "auto",
-        width: "100%",
     },
     pedidosContainer: {
         flex: 3,
@@ -296,11 +309,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#000",
     },
-    inputContainer: {
-        backgroundColor: "#FAF8F8",
-        paddingTop: 20,
-        paddingHorizontal: 20,
-    },
+
     button: {
         backgroundColor: "black",
         alignSelf: "flex-start",
@@ -373,11 +382,5 @@ const styles = StyleSheet.create({
         flex: 10,
         marginTop: 10,
     },
-    imagemAvatar: {
-        height: 100,
-        width: 100,
-        borderRadius: 100 / 2,
-        borderColor: '#252525',
-        borderWidth: 2,
-    },
+
 });
