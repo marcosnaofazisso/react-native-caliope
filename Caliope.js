@@ -8,7 +8,7 @@ import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
 
-import { LogBox } from 'react-native';
+import { LogBox, Keyboard } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 
@@ -66,6 +66,7 @@ export default function Caliope({ navigation }) {
     }, [])
 
     const mandarMensagem = () => {
+        Keyboard.dismiss()
         api.post('/api/message', {
             "session_id": sessionId,
             "input": {
