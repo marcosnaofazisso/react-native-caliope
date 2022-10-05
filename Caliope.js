@@ -17,13 +17,11 @@ import { UsuarioContext } from './context/usuario-context';
 import { fotosDosUsuariosTeste } from './data/fotosUsuarios';
 
 
-
 import { CarrinhoContext } from './context/carrinho-context';
 import { inventario, carrinho } from "./data/data";
 
 
 export default function Caliope({ navigation }) {
-
 
     const { user } = useContext(UsuarioContext)
     const { addItemAoCarrinho } = useContext(CarrinhoContext);
@@ -67,6 +65,7 @@ export default function Caliope({ navigation }) {
 
     const mandarMensagem = () => {
         Keyboard.dismiss()
+
         api.post('/api/message', {
             "session_id": sessionId,
             "input": {
@@ -175,6 +174,8 @@ export default function Caliope({ navigation }) {
     Voice.onSpeechResults = onSpeechResults;
 
 
+
+
     return (
         <>
             <View style={styles.container}>
@@ -197,7 +198,7 @@ export default function Caliope({ navigation }) {
                         keyExtractor={(item, index) => `${item.mensagem} + ${index}`}
                         renderItem={({ item, index }) => (
                             <View>
-                                <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index}>{item.mensagem}</Conversation>
+                                <Conversation tipo={item.mensagemDoUsuario} img={item.imagem} key={index} >{item.mensagem}</Conversation>
                             </View>
                         )} />}
 
