@@ -312,8 +312,8 @@ const styles = StyleSheet.create({
     },
     microphoneIcon: {
         color: 'black',
-        marginLeft: 5,
-        marginRight: 10,
+        marginLeft: 2,
+        marginRight: 8,
         width: 35,
         height: 35,
     },
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     },
     listenIcon: {
         color: 'black',
-        marginRight: 10,
+        marginRight: 5,
         width: 35,
         height: 35,
     },

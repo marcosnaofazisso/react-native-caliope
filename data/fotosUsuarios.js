@@ -2,6 +2,7 @@
 const avatarCris = require('../assets/cristine@caliope.com.br.png')
 const avatarPri = require('../assets/priscila@caliope.com.br.png')
 const avatarMaciel = require('../assets/marcosmaciel@caliope.com.br.png')
+const avatarVinicius = require('../assets/marcosvinicius@caliope.com.br.png')
 const avatarJojo = require('../assets/jonathan@caliope.com.br.png')
 
 const avatarBruno = require('../assets/bruno@caliope.com.br.png')
@@ -19,6 +20,7 @@ export const fotosDosUsuariosTeste = {
     'cristine@caliope.com.br': avatarCris,
     'priscila@caliope.com.br': avatarPri,
     'marcosmaciel@caliope.com.br': avatarMaciel,
+    'marcosvinicius@caliope.com.br': avatarVinicius,
     'jonathan@caliope.com.br': avatarJojo,
 
     'bruno@caliope.com.br': avatarBruno,
