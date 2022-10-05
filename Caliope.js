@@ -8,7 +8,7 @@ import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 
 
-import { LogBox } from 'react-native';
+import { LogBox, Keyboard } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 
@@ -66,6 +66,7 @@ export default function Caliope({ navigation }) {
     }, [])
 
     const mandarMensagem = () => {
+        Keyboard.dismiss()
         api.post('/api/message', {
             "session_id": sessionId,
             "input": {
@@ -312,8 +313,8 @@ const styles = StyleSheet.create({
     },
     microphoneIcon: {
         color: 'black',
-        marginLeft: 5,
-        marginRight: 10,
+        marginLeft: 2,
+        marginRight: 8,
         width: 35,
         height: 35,
     },
@@ -325,7 +326,7 @@ const styles = StyleSheet.create({
     },
     listenIcon: {
         color: 'black',
-        marginRight: 10,
+        marginRight: 5,
         width: 35,
         height: 35,
     },

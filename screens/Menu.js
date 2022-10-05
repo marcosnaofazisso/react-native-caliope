@@ -15,7 +15,7 @@ export default function Menu({ navigation }) {
 
     const { user, isLoggedIn, signIn, signOut } = useContext(UsuarioContext)
 
-    const [email, setEmail] = useState("cristine@caliope.com.br");
+    const [email, setEmail] = useState("marcosvinicius@caliope.com.br");
     const [password, setPassword] = useState("123456789");
 
 
