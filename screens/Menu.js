@@ -199,14 +199,14 @@ export default function Menu({ navigation }) {
 
                     {verPedidos && <View style={styles.pedidosContainer}>
                         <Text style={{ fontWeight: 'bold', marginTop: 15, marginBottom: 10, alignSelf: 'center' }}>Meus Pedidos</Text>
-                        {!user.pedidos.empty ? (
+                        {user.pedidos.length > 0 ? (
                             <FlatList
                                 data={user.pedidos}
                                 keyExtractor={(item) => item.id}
                                 renderItem={renderPedido}
                             />
                         ) : (
-                            <Text>Nenhum item encontrado 😔</Text>
+                            <Text style={{ alignSelf: 'center' }}>Nenhum item encontrado 😔</Text>
                         )}
                         <TouchableOpacity onPress={() => setVerPedidos(false)} style={{ alignSelf: 'center', marginBottom: 10, }}>
                             <Text>Cancelar</Text>
