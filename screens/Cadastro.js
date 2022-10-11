@@ -5,11 +5,11 @@ import { apiUsuario } from '../api'
 
 export default function Cadastro({ navigation, route }) {
 
-    const [nome, setNome] = useState()
-    const [cpf, setCpf] = useState()
-    const [celular, setCelular] = useState()
-    const [email, setEmail] = useState()
-    const [senha, setSenha] = useState()
+    const [nome, setNome] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [celular, setCelular] = useState('')
+    const [email, setEmail] = useState('')
+    const [senha, setSenha] = useState('')
 
 
     useEffect(() => {
@@ -21,6 +21,13 @@ export default function Cadastro({ navigation, route }) {
     }, [])
 
     const criarNovoUsuario = () => {
+        if (nome == '' || cpf == '' || celular == '' || email == '' || senha == '') { return ToastAndroid.show("Um dos campos está vazio. Verifique e tente novamente.", ToastAndroid.SHORT) }
+        else if (senha.length < 6) { return ToastAndroid.show("Senha inválida. Verifique e tente novamente.", ToastAndroid.SHORT) }
+        else if (cpf.length < 11) { return ToastAndroid.show("CPF inválido. Verifique e tente novamente.", ToastAndroid.SHORT) }
+        else if (!email.includes('@')) { return ToastAndroid.show("Email inválido. Verifique e tente novamente.", ToastAndroid.SHORT) }
+
+
+
         apiUsuario.post('/usuario', {
             "nome": nome,
             "cpf": cpf,
@@ -48,7 +55,7 @@ export default function Cadastro({ navigation, route }) {
                     onChangeText={(cpf) => setCpf(cpf)}
                 />
                 <TextInput style={styles.input}
-                    placeholder="Celular"
+                    placeholder="DDD + Celular"
                     value={celular}
                     onChangeText={(celular) => setCelular(celular)}
                 />
