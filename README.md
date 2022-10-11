@@ -1,6 +1,14 @@
-# Projeto feito Challenge da disciplina DISRUPTIVE ARCHITECTURES: IOT, IOB & IA do 2º ano da FIAP.
+# Projeto para o Challenge Plusoft e CPQD 2022 Grupo Caliope do 2º ano da FIAP 2DTSJ.
 
 Criação de um aplicativo usando react-native para um chat usando comunicação de voz e texto atravez de um conexão com o um chatbot criado no watson assintant da IBM.
+
+# Conclusão
+Os acertos que encontramos em construído nossa aplicação foi termos formados um time com muita parceria e dedicação de todos os membros da equipe final!</br>
+Um outro acerto foi ler a documentação da IBM Watson que fornece as ferramentas necessárias para executar uma instância da aplicação. Certamente obter por um ambiente mobile mais robusto, que implementa características nativas que precisamos, como acesso a microfone e auto falante do aparelho.</br>
+Acreditamos que foi um erro ao imaginar que a integração de voz seria fácil pois muitas das ferramentas estavam depreciadas ou não funcionavam no ambiente de desenvolvimento do React-native, de modo que sentimos maior dificuldade neste aspecto.</br>
+Definir qual seria o objetivo do projeto para qual problema abordado, que fosse de encontro com a solução que tínhamos para ser desenvolvida, levou algumas semanas do tempo q tínhamos.</br>
+Para o futuro da nossa aplicação, pensamos em algumas melhorias: fluxo de pagamento, melhoras o fluxo de pedidos, Redesign da tela de exibição da mensagem, clube de pontos. Pois enxergamos várias oportunidades com a aplicabilidade do nosso projeto.
+
 
 ### Developers: 
 * [Marcos Vinicius Ferreira](https://github.com/marcosnaofazisso) || RM: 86904
@@ -10,7 +18,7 @@ Criação de um aplicativo usando react-native para um chat usando comunicação
 * [Marcos Maciel](https://github.com/Marcos26-tech) || RM: 88267
 
 # Demo
-<img src="/demo/demo.caliope.gif" height="800" width="400">
+<img src="/demo/caliope-demo.gif" height="800" width="400">
 
 # Tutorial
 ### npm install
@@ -20,16 +28,18 @@ Criação de um aplicativo usando react-native para um chat usando comunicação
 ### npm i axios
 ### npm i react-native-tts
 
+### npm install navigation
+
+### npm install lint
+
 # como rodar
 npx react-native run-android
 
 
 ## Links do projeto
 
-#### Youtube : https://www.youtube.com/watch?v=699UK76xLS0
-
+#### Youtube : https://youtu.be/GIg9cvIOe_w
 deixa o seu like no video :)
-### Canva: https://www.canva.com/design/DAFKXsaxy-o/lHj31HLF7BV71IeXKMfANw/view?utm_content=DAFKXsaxy-o&utm_campaign=designshare&utm_medium=link&utm_source=publishpresent#2
 
 ### Api no Heroku: https://caliope-watson.herokuapp.com/
 
@@ -41,8 +51,7 @@ deixa o seu like no video :)
 ###### Quanto tempo para a entrega de minha encomenda?
 ###### Meu pedido está atrasado.
 ###### Solução de problemas
-###### Vende produtos 
-###### Desejo comprar roupas feminina
+###### comprar produtos 
 ###### Como posso ter descontos?
 ###### Falar com um agente Humano
 ###### Despedida; obrigado pela ajuda, tchau etc...
