@@ -78,7 +78,8 @@ export default function Menu({ navigation }) {
                 const response = await apiUsuario.get('/usuario')
                 setListaDeUsuarios(response.data)
                 console.log("GET Status Code: ", response.status);
-                console.log("Response Data: ", JSON.stringify(response.data));
+                // console.log("Response Data: ", JSON.stringify(response.data));
+                console.log("Dados carregados com sucesso!");
             }
             getAllUsuarios()
         }

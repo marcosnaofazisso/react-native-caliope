@@ -52,11 +52,13 @@ export default function Cadastro({ navigation, route }) {
                 <TextInput style={styles.input}
                     placeholder="CPF"
                     value={cpf}
+                    keyboardType={'numeric'}
                     onChangeText={(cpf) => setCpf(cpf)}
                 />
                 <TextInput style={styles.input}
                     placeholder="DDD + Celular"
                     value={celular}
+                    keyboardType={'phone-pad'}
                     onChangeText={(celular) => setCelular(celular)}
                 />
                 <TextInput style={styles.input}
